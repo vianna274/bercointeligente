@@ -32,4 +32,9 @@ public abstract class DefaultEvent implements Event {
     public LocalDateTime end() {
         return this.end;
     }
+
+    @Override
+    public String toString(){
+        return "start: '" + this.start + "', end: '" + this.end + "'";
+    }
 }

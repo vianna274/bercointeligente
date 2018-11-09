@@ -20,9 +20,10 @@ public class AquecedorEvent extends DefaultEvent {
         this.temperature = temperature;
     }
 
-    public AquecedorEvent(LocalDateTime end, EquipmentStatus equipmentStatus) {
+    public AquecedorEvent(LocalDateTime end, EquipmentStatus equipmentStatus) throws Exception {
         super(end);
         this.equipmentStatus = equipmentStatus;
+        if(this.temperature == null && equipmentStatus == EquipmentStatus.ON) throw new Exception("Não é possivel não setar temperatura com aparelho ligado");
     }
 
     public AquecedorEvent(LocalDateTime end, Temperature temperature, EquipmentStatus equipmentStatus) {
@@ -45,5 +46,10 @@ public class AquecedorEvent extends DefaultEvent {
 
     public void setEquipmentStatus(EquipmentStatus equipmentStatus) {
         this.equipmentStatus = equipmentStatus;
+    }
+
+    @Override
+    public String toString(){
+        return "Temperature: '" + this.temperature + "', EquipmentStatus: '" + this.equipmentStatus + "' \n";
     }
 }
