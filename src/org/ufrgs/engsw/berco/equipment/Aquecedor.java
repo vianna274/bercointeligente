@@ -8,6 +8,11 @@ public class Aquecedor {
     private EquipmentStatus equipmentStatus;
     private Temperature temperature;
 
+    public Aquecedor() {
+        this.equipmentStatus = EquipmentStatus.OFF;
+        this.temperature = Temperature.NORMAL;
+    }
+
     public void changeTemperature(Temperature temperature) {
         this.temperature = temperature;
     }

@@ -19,8 +19,8 @@ public class Queue {
         queueEvent.add(ev);
     }
 
-    public Event dequeue(String id) {
-        Optional<Event> eventToRemove = queueEvent.stream().filter(ev -> ev.id().equals(id)).findFirst();
+    public Event dequeue() {
+        Optional<Event> eventToRemove = queueEvent.stream().findFirst();
 
         if(eventToRemove.isPresent()) {
             queueEvent.remove(eventToRemove.get());
