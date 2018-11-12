@@ -3,7 +3,6 @@ package org.ufrgs.engsw.berco.data;
 import org.ufrgs.engsw.berco.data.domain.BabyStatus;
 import org.ufrgs.engsw.berco.data.domain.EquipmentStatus;
 import org.ufrgs.engsw.berco.data.domain.Recording;
-import org.ufrgs.engsw.berco.data.domain.Temperature;
 
 import java.time.LocalDateTime;
 import java.util.Random;

@@ -7,16 +7,19 @@ public abstract class DefaultEvent implements Event {
 
     private LocalDateTime start;
     private LocalDateTime end;
-
+    private String id;
     public DefaultEvent(LocalDateTime end) {
         this.start = LocalDateTime.now();
         this.end = end;
+        this.id = this.id();
     }
 
     public DefaultEvent(LocalDateTime start, LocalDateTime end) {
         this.start = start;
         this.end = end;
     }
+
+    public String getId() { return this.id; }
 
     @Override
     public String id() {
