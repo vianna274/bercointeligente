@@ -20,6 +20,12 @@ public class MobileEvent extends DefaultEvent {
         this.speed = speed;
     }
 
+    public MobileEvent(LocalDateTime begin, LocalDateTime end, MobileSpeed speed, EquipmentStatus equipmentStatus) {
+        super(begin, end);
+        this.equipmentStatus = equipmentStatus;
+        this.speed = speed;
+    }
+
     public MobileSpeed getSpeed() {
         return speed;
     }

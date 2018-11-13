@@ -3,6 +3,7 @@ package org.ufrgs.engsw.berco.data;
 import org.ufrgs.engsw.berco.data.domain.BabyStatus;
 import org.ufrgs.engsw.berco.data.domain.EquipmentStatus;
 import org.ufrgs.engsw.berco.data.domain.Recording;
+import org.ufrgs.engsw.berco.equipment.Camera;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -11,6 +12,7 @@ public class CameraEvent extends DefaultEvent {
 
     private Recording recording;
     private EquipmentStatus equipmentStatus;
+    private BabyStatus babyStatus;
 
     private CameraEvent(LocalDateTime end) {
         super(end);
@@ -27,10 +29,25 @@ public class CameraEvent extends DefaultEvent {
         this.equipmentStatus = equipmentStatus;
     }
 
+    public CameraEvent(LocalDateTime begin, LocalDateTime end, EquipmentStatus equipmentStatus) {
+        super(begin, end);
+        this.equipmentStatus = equipmentStatus;
+    }
+
+    public CameraEvent(LocalDateTime begin, LocalDateTime end,  Recording recording, EquipmentStatus equipmentStatus) {
+        super(begin, end);
+        this.recording = recording;
+        this.equipmentStatus = equipmentStatus;
+    }
+
+    public CameraEvent(LocalDateTime begin, LocalDateTime end, BabyStatus babyStatus) {
+        super(begin, end);
+        this.babyStatus = babyStatus;
+    }
+
+
     public BabyStatus getBabyStatus(){
-        Random rand = new Random();
-        if((rand.nextInt(50) + 1) % 2 == 0) return BabyStatus.AWAKE;
-        else return BabyStatus.SLEEPING;
+        return babyStatus;
     }
 
     public Recording getRecording() {

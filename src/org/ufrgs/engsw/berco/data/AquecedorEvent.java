@@ -32,6 +32,18 @@ public class AquecedorEvent extends DefaultEvent {
         this.equipmentStatus = equipmentStatus;
     }
 
+    public AquecedorEvent(LocalDateTime begin, LocalDateTime end, EquipmentStatus equipmentStatus) throws Exception {
+        super(begin, end);
+        this.equipmentStatus = equipmentStatus;
+        if(this.temperature == null && equipmentStatus == EquipmentStatus.ON) throw new Exception("Não é possivel não setar temperatura com aparelho ligado");
+    }
+
+    public AquecedorEvent(LocalDateTime begin, LocalDateTime end, Temperature temperature, EquipmentStatus equipmentStatus) {
+        super(begin, end);
+        this.temperature = temperature;
+        this.equipmentStatus = equipmentStatus;
+    }
+
     public Temperature getTemperature() {
         return temperature;
     }

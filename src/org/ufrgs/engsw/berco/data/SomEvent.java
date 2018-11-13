@@ -29,6 +29,19 @@ public class SomEvent extends DefaultEvent {
         this.currentSong = currentSong;
     }
 
+    public SomEvent(LocalDateTime begin, LocalDateTime end, MusicVolume volume, Song currentSong, EquipmentStatus equipmentStatus) {
+        super(begin, end);
+        this.equipmentStatus = equipmentStatus;
+        this.musicVolume = volume;
+        this.currentSong = currentSong;
+    }
+
+    public SomEvent(LocalDateTime begin, LocalDateTime end, Song currentSong, EquipmentStatus equipmentStatus) {
+        super(begin, end);
+        this.equipmentStatus = equipmentStatus;
+        this.currentSong = currentSong;
+    }
+
     public MusicVolume getMusicVolume() {
         return musicVolume;
     }

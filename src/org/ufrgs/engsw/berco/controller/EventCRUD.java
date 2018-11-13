@@ -15,42 +15,48 @@ public class EventCRUD {
 
     public String createAquecedorEvent(LocalDateTime begin, LocalDateTime end,
                                    EquipmentStatus status) throws Exception {
-        AquecedorEvent event = new AquecedorEvent(end, status);
+        AquecedorEvent event = new AquecedorEvent(begin, end, status);
         this.queue.enqueue(event);
         return event.getId();
     }
 
     public String createAquecedorEvent(LocalDateTime begin, LocalDateTime end,
-                                       Temperature temperature, EquipmentStatus status) throws Exception {
-        AquecedorEvent event = new AquecedorEvent(end, temperature, status);
+                                       Temperature temperature, EquipmentStatus status) {
+        AquecedorEvent event = new AquecedorEvent(begin, end, temperature, status);
         this.queue.enqueue(event);
         return event.getId();
     }
 
     public String createCameraEvent(LocalDateTime begin, LocalDateTime end,
                                 Recording recording, EquipmentStatus status) {
-        CameraEvent event = new CameraEvent(end, recording, status);
+        CameraEvent event = new CameraEvent(begin, end, recording, status);
+        this.queue.enqueue(event);
+        return event.getId();
+    }
+
+    public String createCameraEvent(LocalDateTime begin, LocalDateTime end, BabyStatus babyStatus) {
+        CameraEvent event = new CameraEvent(begin, end, babyStatus);
         this.queue.enqueue(event);
         return event.getId();
     }
 
     public String createSomEvent(LocalDateTime begin, LocalDateTime end,
                                  MusicVolume musicVolume, Song song, EquipmentStatus status) {
-        SomEvent event = new SomEvent(end, musicVolume, song, status);
+        SomEvent event = new SomEvent(begin, end, musicVolume, song, status);
         this.queue.enqueue(event);
         return event.getId();
     }
 
     public String createMobileEvent(LocalDateTime begin, LocalDateTime end,
                                     MobileSpeed mobileSpeed, EquipmentStatus status) {
-        MobileEvent event = new MobileEvent(end, mobileSpeed, status);
+        MobileEvent event = new MobileEvent(begin, end, mobileSpeed, status);
         this.queue.enqueue(event);
         return event.getId();
     }
 
     public String createLuzEvent(LocalDateTime begin, LocalDateTime end,
                                  EquipmentStatus status) {
-        LuzEvent event = new LuzEvent(end, status);
+        LuzEvent event = new LuzEvent(begin, end, status);
         this.queue.enqueue(event);
         return event.getId();
     }

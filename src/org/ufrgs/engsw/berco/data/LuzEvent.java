@@ -16,6 +16,10 @@ public class LuzEvent extends DefaultEvent {
         super(end);
         this.equipmentStatus = equipmentStatus;
     }
+    public LuzEvent(LocalDateTime begin, LocalDateTime end, EquipmentStatus equipmentStatus) {
+        super(begin, end);
+        this.equipmentStatus = equipmentStatus;
+    }
 
 
     public EquipmentStatus getEquipmentStatus() {
