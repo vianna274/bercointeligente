@@ -25,7 +25,9 @@ public class MobileHandler extends Scheduler<MobileEvent> implements EventListen
     }
 
     public void handleStartEvent(MobileEvent event) {
+        System.out.println(event.toString());
         if(event.getEquipmentStatus() != mobile.getEquipmentStatus()){
+            System.out.println("Colocando como on");
             mobile.toggle();
         }
         if(event.getSpeed() !=  mobile.getSpeed()) {
