@@ -1,31 +1,31 @@
 package org.ufrgs.engsw.berco;
 
+import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import org.ufrgs.engsw.berco.controller.EventCRUD;
-import org.ufrgs.engsw.berco.controller.Exibicao;
+import org.ufrgs.engsw.berco.controller.EquipmentService;
+import org.ufrgs.engsw.berco.data.AquecedorEvent;
+import org.ufrgs.engsw.berco.data.Event;
+import org.ufrgs.engsw.berco.data.domain.EquipmentStatus;
+import org.ufrgs.engsw.berco.data.domain.Temperature;
 import org.ufrgs.engsw.berco.equipment.*;
 import org.ufrgs.engsw.berco.event.Dispatcher;
 import org.ufrgs.engsw.berco.event.Queue;
 import org.ufrgs.engsw.berco.handler.*;
 import org.ufrgs.engsw.berco.ui.UI;
+import org.ufrgs.engsw.berco.ui.UI.UICommand;
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 public class Main extends Application implements  EventHandler<ActionEvent>{
@@ -48,19 +48,26 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
     Mobile mobile;
     Luz luz;
 
+    // TODO: DELETE THIS EVENT AFTER UI IS DONE
+    private Event testEventDeleteAfterUiDone;
+
     public static void main(String[] args) throws Exception {
         launch(args);
     }
 
-    public UI stuffInitialize() {
-        // Queue criada (comunicacao entre os componentes)
-        Queue queue = new Queue();
-        // Handlers com seus hardwares
+    public UI initialize() {
+
         aquecedor = new Aquecedor();
         camera = new Camera();
         som = new Som();
         mobile = new Mobile();
         luz = new Luz();
+
+        Queue queue = new Queue();
+
+        LocalDateTime start = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime end = start.plusMinutes(5);
+        this.testEventDeleteAfterUiDone = new AquecedorEvent(start, end, Temperature.NORMAL, EquipmentStatus.ON);
 
         AquecedorHandler aquecedorHandler = new AquecedorHandler(aquecedor, queue);
         CameraHandler cameraHandler = new CameraHandler(camera, queue);
@@ -68,16 +75,19 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         SomHandler somHandler = new SomHandler(som, queue);
         LuzHandler luzHandler = new LuzHandler(luz, queue);
 
-        // Dispatcher da queue
-        Dispatcher dispatcher = new Dispatcher(queue, Collections.singletonList(aquecedorHandler),
-                Collections.singletonList(cameraHandler), Collections.singletonList(luzHandler),
-                Collections.singletonList(mobileHandler), Collections.singletonList(somHandler)); //POP queue events and, based on this event type(on, off...) it dispatch/emit the the assigned handler
-        new Thread(dispatcher::run).start(); // Thread para rodar o dispatcher
-        // EventCrud e Exibicao
-        EventCRUD eventCrud = new EventCRUD(queue);
-        Exibicao exibicao = new Exibicao(aquecedor, camera, luz, mobile, som);
-        // UI
-        UI ui = new UI(eventCrud, exibicao);
+        Dispatcher dispatcher = new Dispatcher(queue,
+            Collections.singletonList(aquecedorHandler),
+            Collections.singletonList(cameraHandler),
+            Collections.singletonList(luzHandler),
+            Collections.singletonList(mobileHandler),
+            Collections.singletonList(somHandler)
+        );
+
+        Scheduler scheduler = new Scheduler(queue);
+        EventCRUD eventCrud = new EventCRUD(queue, scheduler);
+        EquipmentService equipmentService = new EquipmentService(aquecedor, camera, luz, mobile, som);
+        UI ui = new UI(eventCrud, equipmentService);
+
         return ui;
     }
 
@@ -365,7 +375,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        UI ui = stuffInitialize();
+        UI ui = initialize();
         babyStatusBtn = new Button();
         babyStatusBtn.setText("Status do Bebe");
         babyStatusBtn.setLayoutX(30);
@@ -375,16 +385,15 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         statusBabyLabel.setLayoutY(13);
 
         babyStatusBtn.setOnAction(e -> {
-            statusBabyLabel.setText(ui.execute(1));
+            statusBabyLabel.setText(ui.execute(UICommand.BABY_STATUS));
         });
-
 
         equipmentStatusBtn = new Button();
         equipmentStatusBtn.setText("Status dos Equipamentos");
         equipmentStatusBtn.setLayoutX(30);
         equipmentStatusBtn.setLayoutY(50);
         equipmentStatusBtn.setOnAction(e -> {
-            String response = ui.execute(2);
+            String response = ui.execute(UICommand.EQUIPAMENT_STATUS);
             Label label = new Label(response);
             StackPane secondaryLayout = new StackPane();
             secondaryLayout.getChildren().add(label);
@@ -408,7 +417,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         wakeUpBabyBtn.setLayoutX(30);
         wakeUpBabyBtn.setLayoutY(90);
         wakeUpBabyBtn.setOnAction(e -> {
-            ui.execute(3);
+            ui.execute(UICommand.BABY_WAKE_UP);
         });
 
         createEventBtn = new Button();
@@ -416,12 +425,18 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         createEventBtn.setOnAction(this);
         createEventBtn.setLayoutX(30);
         createEventBtn.setLayoutY(130);
+        createEventBtn.setOnAction(e -> {
+            ui.execute(UICommand.CREATE_EVENT, this.testEventDeleteAfterUiDone);
+        });
 
         deleteEventBtn = new Button();
         deleteEventBtn.setText("Deletar Eventos");
         deleteEventBtn.setOnAction(this);
         deleteEventBtn.setLayoutX(30);
         deleteEventBtn.setLayoutY(170);
+        deleteEventBtn.setOnAction(e -> {
+            ui.execute(UICommand.DELETE_EVENT, this.testEventDeleteAfterUiDone);
+        });
 
         editEventBtn = new Button();
         editEventBtn.setText("Editar Eventos");
@@ -456,16 +471,27 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         primaryStage.setTitle("Berco Inteligente");
 
         Pane layout = new Pane();
-        layout.getChildren().addAll(babyStatusBtn, equipmentStatusBtn, wakeUpBabyBtn, createEventBtn, deleteEventBtn,
-                editEventBtn, pauseEventBtn, continueEventBtn, showComponentsBtn, statusBabyLabel);
 
+        layout.getChildren().addAll(
+            babyStatusBtn,
+            equipmentStatusBtn,
+            wakeUpBabyBtn,
+            createEventBtn,
+            deleteEventBtn,
+            editEventBtn,
+            pauseEventBtn,
+            continueEventBtn,
+            showComponentsBtn,
+            statusBabyLabel
+        );
 
         Scene scene = new Scene(layout, 300, 400);
+
         primaryStage.setScene(scene);
+
         primaryStage.show();
     }
 
     @Override
-    public void handle(ActionEvent event) {
-    }
+    public void handle(ActionEvent event) {}
 }

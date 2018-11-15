@@ -1,40 +1,64 @@
 package org.ufrgs.engsw.berco.ui;
 
+import org.ufrgs.engsw.berco.controller.EquipmentService;
 import org.ufrgs.engsw.berco.controller.EventCRUD;
-import org.ufrgs.engsw.berco.controller.Exibicao;
+import org.ufrgs.engsw.berco.data.Event;
 import org.ufrgs.engsw.berco.data.ExibicaoStatus;
-import org.ufrgs.engsw.berco.data.domain.*;
+import org.ufrgs.engsw.berco.data.domain.BabyStatus;
+import org.ufrgs.engsw.berco.data.domain.EquipmentStatus;
+import org.ufrgs.engsw.berco.data.domain.Recording;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.function.Function;
 
 
 public class UI {
 
-    private EventCRUD eventCrud;
-    private Exibicao exibicao;
-    private Function<String, Integer> callback;
-
-    public UI(EventCRUD eventCRUD, Exibicao exibicao) {
-        this.eventCrud = eventCRUD;
-        this.exibicao = exibicao;
+    public enum UICommand {
+        BABY_STATUS, EQUIPAMENT_STATUS, BABY_WAKE_UP, DELETE_EVENT, CREATE_EVENT;
     }
 
-    public String execute(int opt)  {
+    private EventCRUD eventCrud;
+    private EquipmentService equipmentService;
+
+    public UI(EventCRUD eventCRUD, EquipmentService equipmentService) {
+        this.eventCrud = eventCRUD;
+        this.equipmentService = equipmentService;
+    }
+
+    public String execute(UICommand opt) {
+        return this.execute(opt, null);
+    }
+
+    public String execute(UICommand opt, Event event)  {
         switch(opt) {
-            case 1:
+            case BABY_STATUS:
                 return this.getBabyStatus();
-            case 2:
+
+            case EQUIPAMENT_STATUS:
                 return this.getEquipmentStatus();
-            case 3:
+
+            case BABY_WAKE_UP:
                 this.wakeUpBaby();
                 break;
-            case 0:
-                System.out.println("Exiting");
+
+            case DELETE_EVENT:
+                this.deleteScheduledEvent(event.id());
+                break;
+
+            case CREATE_EVENT:
+                return this.scheduleEvent(event);
+
+            default:
                 System.exit(0);
+                break;
         }
+
         return "";
+    }
+
+    private void deleteScheduledEvent(String eventId) {
+        this.eventCrud.deleteScheduledEvent(eventId);
     }
 
     private void wakeUpBaby() {
@@ -45,24 +69,15 @@ public class UI {
     }
 
     private String getBabyStatus() {
-        String res = exibicao.getBabyStatus();
-        return res;
+        return equipmentService.getBabyStatus();
+    }
+
+    private String scheduleEvent(Event event) {
+        return this.eventCrud.scheduleEvent(event);
     }
 
     private String getEquipmentStatus() {
-        ExibicaoStatus res = exibicao.getEquipmentStatus();
+        ExibicaoStatus res = equipmentService.getEquipmentStatus();
         return res.toString();
-    }
-
-    private void createDummyEvent()  {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime end = now.plus(10, ChronoUnit.SECONDS);
-
-        this.eventCrud.createCameraEvent(now, end, Recording.ON, EquipmentStatus.ON);
-        this.eventCrud.createLuzEvent(now, end, EquipmentStatus.ON);
-        this.eventCrud.createMobileEvent(now, end, MobileSpeed.FAST, EquipmentStatus.ON);
-        this.eventCrud.createSomEvent(now, end, MusicVolume.HIGH, Song.THIRD, EquipmentStatus.ON);
-        this.eventCrud.createAquecedorEvent(now, end, Temperature.HOT, EquipmentStatus.ON);
-
     }
 }

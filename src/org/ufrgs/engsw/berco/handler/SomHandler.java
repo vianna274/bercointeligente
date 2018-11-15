@@ -5,10 +5,11 @@ import org.ufrgs.engsw.berco.equipment.Som;
 import org.ufrgs.engsw.berco.event.EventListener;
 import org.ufrgs.engsw.berco.event.Queue;
 
-public class SomHandler extends Scheduler<SomEvent> implements EventListener<SomEvent>{
+public class SomHandler implements EventListener<SomEvent>{
 
     private Som som;
     private Queue queue;
+
     public SomHandler(Som som, Queue queue) {
         this.som = som;
         this.queue = queue;
@@ -16,7 +17,7 @@ public class SomHandler extends Scheduler<SomEvent> implements EventListener<Som
 
     @Override
     public void onEvent(SomEvent event) {
-        this.scheduleEvent(event);
+        this.handleStartEvent(event);
     }
 
     public void handleEndEvent(SomEvent event) {

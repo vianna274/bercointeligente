@@ -5,7 +5,7 @@ import org.ufrgs.engsw.berco.equipment.Aquecedor;
 import org.ufrgs.engsw.berco.event.EventListener;
 import org.ufrgs.engsw.berco.event.Queue;
 
-public class AquecedorHandler extends Scheduler<AquecedorEvent> implements EventListener<AquecedorEvent>{
+public class AquecedorHandler implements EventListener<AquecedorEvent>{
 
     private Aquecedor aquecedor;
     private Queue queue;
@@ -18,7 +18,7 @@ public class AquecedorHandler extends Scheduler<AquecedorEvent> implements Event
 
     @Override
     public void onEvent(AquecedorEvent event) {
-        this.scheduleEvent(event);
+        this.handleStartEvent(event);
     }
 
     public void handleEndEvent(AquecedorEvent event) {

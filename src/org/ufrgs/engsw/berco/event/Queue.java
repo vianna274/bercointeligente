@@ -1,24 +1,27 @@
 package org.ufrgs.engsw.berco.event;
 
 import org.ufrgs.engsw.berco.data.DefaultEvent;
+import org.ufrgs.engsw.berco.data.Event;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class Queue {
 
-    private ArrayList<DefaultEvent> queueEvent;
+    private ArrayList<Event> queueEvent;
 
     public Queue() {
         this.queueEvent = new ArrayList<>();
     }
 
-    public void enqueue(DefaultEvent ev) {
+    public void enqueue(Event ev) {
         queueEvent.add(ev);
     }
 
-    public DefaultEvent dequeue() {
-        Optional<DefaultEvent> eventToRemove = queueEvent.stream().findFirst();
+    public Event dequeue() {
+        Optional<Event> eventToRemove = queueEvent.stream().findFirst();
 
         if(eventToRemove.isPresent()) {
             queueEvent.remove(eventToRemove.get());
@@ -27,12 +30,18 @@ public class Queue {
         return null;
     }
 
-    public DefaultEvent getEvent(String id) {
-        for(DefaultEvent event : this.queueEvent) {
-            if (event.getId() == id)
+    public Event getEvent(String id) {
+        for(Event event : this.queueEvent) {
+            if (event.id().equals(id)) {
                 return event;
+            }
         }
+
         return null;
+    }
+
+    public List<Event> listEvents() {
+        return Collections.unmodifiableList(this.queueEvent);
     }
 
 }

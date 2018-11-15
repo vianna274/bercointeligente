@@ -5,7 +5,7 @@ import org.ufrgs.engsw.berco.equipment.Mobile;
 import org.ufrgs.engsw.berco.event.EventListener;
 import org.ufrgs.engsw.berco.event.Queue;
 
-public class MobileHandler extends Scheduler<MobileEvent> implements EventListener<MobileEvent>{
+public class MobileHandler implements EventListener<MobileEvent>{
 
     private Mobile mobile;
     private Queue queue;
@@ -17,7 +17,7 @@ public class MobileHandler extends Scheduler<MobileEvent> implements EventListen
 
     @Override
     public void onEvent(MobileEvent event) {
-        this.scheduleEvent(event);
+        this.handleStartEvent(event);
     }
 
     public void handleEndEvent(MobileEvent event) {

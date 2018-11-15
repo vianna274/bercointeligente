@@ -5,7 +5,7 @@ import org.ufrgs.engsw.berco.equipment.Luz;
 import org.ufrgs.engsw.berco.event.EventListener;
 import org.ufrgs.engsw.berco.event.Queue;
 
-public class LuzHandler extends Scheduler<LuzEvent> implements EventListener<LuzEvent>{
+public class LuzHandler implements EventListener<LuzEvent>{
 
     private Luz luz;
     private Queue queue;
@@ -17,7 +17,7 @@ public class LuzHandler extends Scheduler<LuzEvent> implements EventListener<Luz
 
     @Override
     public void onEvent(LuzEvent event) {
-        this.scheduleEvent(event);
+        this.handleStartEvent(event);
     }
 
     public void handleEndEvent(LuzEvent event) {

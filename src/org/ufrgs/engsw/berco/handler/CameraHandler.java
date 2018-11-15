@@ -9,7 +9,7 @@ import org.ufrgs.engsw.berco.event.Queue;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class CameraHandler extends Scheduler<CameraEvent> implements EventListener<CameraEvent> {
+public class CameraHandler implements EventListener<CameraEvent> {
 
     private Camera camera;
     private Queue queue;
@@ -21,17 +21,18 @@ public class CameraHandler extends Scheduler<CameraEvent> implements EventListen
 
     @Override
     public void onEvent(CameraEvent event) {
-        this.scheduleEvent(event);
+        this.handleStartEvent(event);
     }
-
 
     private void handleBabyWokeUp() {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plus(15, ChronoUnit.MINUTES);
+
         AquecedorEvent aquecedorEvent = new AquecedorEvent(start, end, Temperature.NORMAL, EquipmentStatus.ON);
         MobileEvent mobileEvent = new MobileEvent(start, end, MobileSpeed.MEDIUM, EquipmentStatus.ON);
         SomEvent somEvent = new SomEvent(start, end, MusicVolume.MEDIUM, Song.SECOND, EquipmentStatus.ON);
         LuzEvent luzEvent = new LuzEvent(start, end, EquipmentStatus.ON);
+
         queue.enqueue(aquecedorEvent);
         queue.enqueue(mobileEvent);
         queue.enqueue(somEvent);
@@ -41,10 +42,12 @@ public class CameraHandler extends Scheduler<CameraEvent> implements EventListen
     private void handleBabySleeping() {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plus(15, ChronoUnit.MINUTES);
+
         AquecedorEvent aquecedorEvent = new AquecedorEvent(start, end, Temperature.COLD, EquipmentStatus.OFF);
         MobileEvent mobileEvent = new MobileEvent(start, end, MobileSpeed.SLOW, EquipmentStatus.ON);
         SomEvent somEvent = new SomEvent(start, end, MusicVolume.LOW, Song.FIRST, EquipmentStatus.ON);
         LuzEvent luzEvent = new LuzEvent(start, end, EquipmentStatus.OFF);
+
         queue.enqueue(aquecedorEvent);
         queue.enqueue(mobileEvent);
         queue.enqueue(somEvent);
@@ -55,18 +58,24 @@ public class CameraHandler extends Scheduler<CameraEvent> implements EventListen
         if (event.getBabyStatus() != null) {
             this.camera.setBabyStatus(event.getBabyStatus());
             this.handleBabyWokeUp();
+
             return;
         }
-        if(event.getEquipmentStatus() != camera.getEquipmentStatus())
+
+        if (event.getEquipmentStatus() != camera.getEquipmentStatus()) {
             camera.toggle();
-        if(event.getRecording() != null)
+        }
+
+        if(event.getRecording() != null) {
             camera.recordingControl(event.getRecording());
+        }
+
         if(event.getBabyStatus() == BabyStatus.AWAKE) {
             event.setRecording(Recording.ON);
             event.setEquipmentStatus(EquipmentStatus.ON);
             camera.recordingControl(event.getRecording());
-        }
-        else {
+
+        } else {
             event.setRecording(Recording.OFF);
             event.setEquipmentStatus(EquipmentStatus.OFF);
             camera.recordingControl(event.getRecording());
@@ -78,14 +87,21 @@ public class CameraHandler extends Scheduler<CameraEvent> implements EventListen
             switch(event.getBabyStatus()) {
                 case AWAKE:
                     System.out.println("Indo dormir");
+
                     this.camera.setBabyStatus(BabyStatus.SLEEPING);
                     this.handleBabySleeping();
+
                     break;
+
                 case SLEEPING:
                     System.out.println("Acordando");
+
                     this.camera.setBabyStatus(BabyStatus.AWAKE);
-                    this.handleBabyWokeUp(); break;
+                    this.handleBabyWokeUp();
+
+                    break;
             }
+
         } else {
             this.camera.toggle();
         }

@@ -1,58 +1,47 @@
 package org.ufrgs.engsw.berco.handler;
 
-import org.ufrgs.engsw.berco.data.DefaultEvent;
+import org.ufrgs.engsw.berco.data.Event;
+import org.ufrgs.engsw.berco.event.Queue;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public abstract class Scheduler<T extends DefaultEvent> {
+public class Scheduler {
 
-    private ArrayList<T> events;
-    private T currentEvent;
+    private ArrayList<Event> events;
 
-    public Scheduler() {
-        this.currentEvent = null;
+    private Queue queue;
+
+    public Scheduler(Queue queue) {
         this.events = new ArrayList<>();
-        new Thread(this::eventsManager).start();
+        this.queue = queue;
+
+        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(this::run, 0, 1, TimeUnit.SECONDS);
     }
 
-    public void scheduleEvent(T event) {
+    public void scheduleEvent(Event event) {
         this.events.add(event);
     }
 
-    private void isAnyEventBegun() {
+    public void removeEvent(final String id) {
+        Optional<Event> event = this.events.stream().filter(e -> e.id().equals(id)).findFirst();
+        event.ifPresent(e -> events.remove(e));
+    }
+
+    private void run() {
         LocalDateTime currentDate = LocalDateTime.now();
-        for(T event : this.events) {
+
+        for(Event event : this.events) {
             if (event.start().compareTo(currentDate) <= 0) {
-                this.currentEvent = event;
                 this.events.remove(event);
-                this.handleStartEvent(this.currentEvent);
+                this.queue.enqueue(event);
                 break;
             }
         }
     }
-
-    private void isCurrentEventEnded() {
-        LocalDateTime currentDate = LocalDateTime.now();
-        if (this.currentEvent.end().compareTo(currentDate) <= 0) {
-            this.handleEndEvent(this.currentEvent);
-            this.currentEvent = null;
-        }
-    }
-
-    private void eventsManager() {
-        while(true) {
-            if (this.currentEvent != null) {
-                this.isCurrentEventEnded();
-            }
-            isAnyEventBegun();
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {}
-        }
-    }
-
-    public abstract void handleEndEvent(T event);
-
-    public abstract void handleStartEvent(T event);
 }

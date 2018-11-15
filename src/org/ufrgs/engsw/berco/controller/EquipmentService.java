@@ -4,7 +4,7 @@ import org.ufrgs.engsw.berco.data.ExibicaoStatus;
 import org.ufrgs.engsw.berco.data.domain.BabyStatus;
 import org.ufrgs.engsw.berco.equipment.*;
 
-public class Exibicao {
+public class EquipmentService {
 
     private Aquecedor aquecedor;
     private Camera camera;
@@ -12,7 +12,7 @@ public class Exibicao {
     private Mobile mobile;
     private Som som;
 
-    public Exibicao(Aquecedor aquecedor, Camera camera, Luz luz, Mobile mobile, Som som) {
+    public EquipmentService(Aquecedor aquecedor, Camera camera, Luz luz, Mobile mobile, Som som) {
         this.aquecedor = aquecedor;
         this.camera = camera;
         this.luz = luz;
