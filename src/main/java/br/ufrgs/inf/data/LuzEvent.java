@@ -26,6 +26,15 @@ public class LuzEvent extends DefaultEvent {
         return new LuzEvent("", now, now, EquipmentStatus.values()[0]);
     }
 
+    public void toggleLigthStatus(){
+        if(equipmentStatus.equals(EquipmentStatus.OFF)){
+            this.equipmentStatus = EquipmentStatus.ON;
+        }
+        else{
+            this.equipmentStatus = EquipmentStatus.OFF;
+        }
+    }
+
     public EquipmentStatus getEquipmentStatus() {
         return equipmentStatus;
     }

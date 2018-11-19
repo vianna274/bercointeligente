@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" VBox.vgrow="ALWAYS">
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="474.0" prefWidth="1180.0" VBox.vgrow="ALWAYS">
          <children>
             <Separator layoutX="9.0" layoutY="40.0" prefHeight="23.0" prefWidth="622.0" />
             <Label layoutX="1.0" layoutY="-1.0" prefHeight="30.0" prefWidth="231.0" text="Configuraçao">
@@ -21,9 +21,10 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button layoutX="195.0" layoutY="426.0" mnemonicParsing="false" onAction="#onClickBackApp" prefHeight="57.0" prefWidth="251.0" text="Voltar" />
+            <Button layoutX="47.0" layoutY="417.0" mnemonicParsing="false" onAction="#onClickBackApp" prefHeight="57.0" prefWidth="251.0" text="Voltar" />
+            <Button layoutX="378.0" layoutY="417.0" mnemonicParsing="false" onAction="#onClickToggleBaby" prefHeight="57.0" prefWidth="251.0" text="Toggle Baby" />
             <ComboBox fx:id="type" layoutX="60.0" layoutY="66.0" onAction="#onTypeChanged" prefHeight="42.0" prefWidth="203.0" />
-            <Label layoutX="350.0" layoutY="-7.0" prefHeight="42.0" prefWidth="128.0" text="Status Bebe:">
+            <Label layoutX="670.0" layoutY="66.0" prefHeight="42.0" prefWidth="104.0" text="Status Bebe:">
                <font>
                   <Font size="17.0" />
                </font>
@@ -90,7 +91,7 @@
             </TableView>
             <Button fx:id="addEvent" layoutX="364.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickAdd" prefHeight="42.0" prefWidth="128.0" text="Adicionar" />
             <Button fx:id="deteleEvent" layoutX="503.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickDeleteEvent" prefHeight="42.0" prefWidth="128.0" text="Excluir" />
-            <Label fx:id="babyStatus" layoutX="478.0" layoutY="-7.0" prefHeight="42.0" prefWidth="128.0">
+            <Label fx:id="babyStatus" layoutX="774.0" layoutY="66.0" prefHeight="42.0" prefWidth="120.0">
                <font>
                   <Font size="17.0" />
                </font>
@@ -98,6 +99,16 @@
             <Label layoutX="3.0" layoutY="67.0" prefHeight="42.0" prefWidth="66.0" text="Tipo:">
                <font>
                   <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="670.0" layoutY="129.0" prefHeight="42.0" prefWidth="149.0" text="Status Mamadeira:">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="babyBottleStatus" layoutX="815.0" layoutY="128.0" prefHeight="42.0" prefWidth="149.0">
+               <font>
+                  <Font size="17.0" />
                </font>
             </Label>
          </children>
