@@ -2,11 +2,14 @@ package br.ufrgs.inf.controller;
 
 import br.ufrgs.inf.data.*;
 import br.ufrgs.inf.data.domain.*;
+import br.ufrgs.inf.equipment.BabyBottle;
 import br.ufrgs.inf.event.Queue;
 import br.ufrgs.inf.handler.Scheduler;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 
 public class AppController {
@@ -14,6 +17,11 @@ public class AppController {
     private final Queue queue;
     private final Scheduler scheduler;
     private final EquipmentService equipmentService;
+    private BabyBottle babyBottle;
+    private BabyStatus babyStatus;
+    private EquipmentStatus ligthStatus;
+
+    private List<Consumer<BabyBottle>> babyBottleListeners;
 
     public AppController(final Queue queue,
                          final Scheduler scheduler,
@@ -21,19 +29,44 @@ public class AppController {
         this.equipmentService = equipmentService;
         this.queue = queue;
         this.scheduler = scheduler;
+        this.babyStatus = BabyStatus.SLEEPING;
+        this.babyBottle = new BabyBottle();
+        this.babyBottleListeners = new ArrayList<>();
+        this.ligthStatus = EquipmentStatus.OFF;
     }
 
-    public void wakeUpBaby() {
-        final LocalDateTime now = LocalDateTime.now();
 
-        final LocalDateTime end = now.plus(10, ChronoUnit.SECONDS);
-
-        this.createCameraEvent("Wake up test", now, end, Recording.OFF, EquipmentStatus.ON);
-        this.createCameraEvent("Wake up test", now, end, BabyStatus.AWAKE);
+    public void setBabyStatus(BabyStatus babyStatus) {
+        this.babyStatus = babyStatus;
     }
 
-    private String getBabyStatus() {
-        return equipmentService.getBabyStatus();
+    public BabyStatus getBabyStatus() {
+        return babyStatus;
+    }
+
+    public void addBabyBottleListener(final Consumer<BabyBottle> consumer) {
+        this.babyBottleListeners.add(consumer);
+    }
+
+    public void notifyBabyBottleListeners(final BabyBottle babyBottle) {
+        this.babyBottleListeners.forEach(s -> s.accept(this.babyBottle));
+    }
+
+    public void toggleBabyStatus() {
+        if(babyStatus.equals(BabyStatus.AWAKE)){
+            this.babyStatus = BabyStatus.SLEEPING;
+        }
+        else{
+            this.babyStatus =  BabyStatus.AWAKE;
+        }
+
+        this.babyBottle.toggleBabyBottleStatus();
+       // this.ligthStatus
+        this.notifyBabyBottleListeners(this.babyBottle);
+    }
+
+    public BabyBottle getBabyBottle() {
+        return babyBottle;
     }
 
     public String createAquecedorEvent(String name, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) throws Exception {
@@ -113,5 +146,13 @@ public class AppController {
 
     public CameraEvent getCameraEvent(String id) {
         return (CameraEvent)queue.getEvent(id);
+    }
+
+    public EquipmentStatus getLigthStatus() {
+        return ligthStatus;
+    }
+
+    public void setLigthStatus(EquipmentStatus ligthStatus) {
+        this.ligthStatus = ligthStatus;
     }
 }

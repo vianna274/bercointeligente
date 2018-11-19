@@ -2,6 +2,10 @@ package br.ufrgs.inf.view;
 
 import br.ufrgs.inf.controller.AppController;
 import br.ufrgs.inf.controller.EventManager;
+import br.ufrgs.inf.data.*;
+import br.ufrgs.inf.data.domain.*;
+import br.ufrgs.inf.view.components.DateTimePickerCell;
+import br.ufrgs.inf.view.components.EditableTextCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -15,17 +19,16 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import br.ufrgs.inf.data.*;
-import br.ufrgs.inf.data.domain.*;
-import br.ufrgs.inf.view.components.DateTimePickerCell;
-import br.ufrgs.inf.view.components.EditableTextCell;
 import tornadofx.control.DateTimePicker;
 
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +42,7 @@ public class AppUI {
     @FXML private Label eventTypeTitle;
 
     @FXML private Label babyStatus;
+    @FXML private Label babyBottleStatus;
 
     @FXML private TableView<CameraEvent> tableViewCamera;
     @FXML private TableColumn<CameraEvent, Recording> recordingCameraCol;
@@ -162,6 +166,7 @@ public class AppUI {
         Optional.ofNullable(this.tableViewMobile).ifPresent(this::configMobileTable);
         Optional.ofNullable(this.tableViewSound).ifPresent(this::configSoundTable);
         Optional.ofNullable(this.babyStatus).ifPresent(this::configBabyStatus);
+        Optional.ofNullable(this.babyBottleStatus).ifPresent(this::configBabyBottleStatus);
         Optional.ofNullable(this.eventTypeTitle).ifPresent(this::configEventTypeTitle);
         Optional.ofNullable(this.cameraPane).ifPresent(this::configCameraPane);
         Optional.ofNullable(this.lightPane).ifPresent(this::configLightPane);
@@ -334,7 +339,11 @@ public class AppUI {
     }
 
     private void configBabyStatus(final Label babyStatus) {
-        babyStatus.setText(BabyStatus.SLEEPING.toString());
+        babyStatus.setText(this.appController.getBabyStatus().toString());
+    }
+    private void configBabyBottleStatus(final Label babyBottleStatus) {
+        this.appController.addBabyBottleListener(b -> this.babyBottleStatus.setText(b.getBabyBottleStatus().toString()));
+        this.babyBottleStatus.setText(this.appController.getBabyBottle().getBabyBottleStatus().toString());
     }
 
     private void configSoundTable(final TableView<SomEvent> tableViewSound) {
@@ -585,6 +594,11 @@ public class AppUI {
         }
 
         this.showStage(this.loadConfigStage(), event);
+    }
+
+    public void onClickToggleBaby(final ActionEvent event) throws InterruptedException {
+        this.appController.toggleBabyStatus();
+        this.configBabyStatus(this.babyStatus);
     }
 
     private void showStage(final Stage stage, final ActionEvent event) {
