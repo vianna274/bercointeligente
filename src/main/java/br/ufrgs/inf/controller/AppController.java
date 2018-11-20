@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 public class AppController {
 
     private final Queue queue;
-    private final Scheduler scheduler;
     private final EquipmentService equipmentService;
     private BabyBottle babyBottle;
     private BabyStatus babyStatus;
@@ -24,11 +23,9 @@ public class AppController {
     private List<Consumer<BabyBottle>> babyBottleListeners;
 
     public AppController(final Queue queue,
-                         final Scheduler scheduler,
                          final EquipmentService equipmentService) {
         this.equipmentService = equipmentService;
         this.queue = queue;
-        this.scheduler = scheduler;
         this.babyStatus = BabyStatus.SLEEPING;
         this.babyBottle = new BabyBottle();
         this.babyBottleListeners = new ArrayList<>();
@@ -69,83 +66,140 @@ public class AppController {
         return babyBottle;
     }
 
-    public String createAquecedorEvent(String name, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) throws Exception {
-        AquecedorEvent event = new AquecedorEvent(name, begin, end, status);
+    /* POST */
+
+    public void wakeUpBaby() {
+        CameraEvent event = new CameraEvent(Operation.ACTION, EventName.BABY_WAKE_UP, LocalDateTime.now());
+
+        this.queue.enqueue(event);
+    }
+
+    public void babySleep() {
+        CameraEvent event = new CameraEvent(Operation.ACTION, EventName.BABY_SLEPT, LocalDateTime.now());
+
+        this.queue.enqueue(event);
+    }
+
+    public String createAquecedorEvent(LocalDateTime begin, LocalDateTime end, EquipmentStatus status) throws Exception {
+        AquecedorEvent event = new AquecedorEvent(Operation.POST, null, begin, end, status);
 
         this.queue.enqueue(event);
 
         return event.getId();
     }
 
-    public String createAquecedorEvent(String name, LocalDateTime begin, LocalDateTime end, Temperature temperature, EquipmentStatus status) {
-        AquecedorEvent event = new AquecedorEvent(name, begin, end, temperature, status);
+    public String createAquecedorEvent(LocalDateTime begin, LocalDateTime end, Temperature temperature, EquipmentStatus status) {
+        AquecedorEvent event = new AquecedorEvent(Operation.POST, null, begin, end, temperature, status);
 
         this.queue.enqueue(event);
 
         return event.getId();
     }
 
-    public String createCameraEvent(String name, LocalDateTime begin, LocalDateTime end, Recording recording, EquipmentStatus status) {
-        CameraEvent event = new CameraEvent(name, begin, end, recording, status);
+    public String createCameraEvent(LocalDateTime begin, LocalDateTime end, Recording recording, EquipmentStatus status) {
+        CameraEvent event = new CameraEvent(Operation.POST, null, begin, end, recording, status);
 
         this.queue.enqueue(event);
 
         return event.getId();
     }
 
-    public String createCameraEvent(String name, LocalDateTime begin, LocalDateTime end, BabyStatus babyStatus) {
-        CameraEvent event = new CameraEvent(name, begin, end, babyStatus);
+    public String createCameraEvent(LocalDateTime begin, LocalDateTime end, BabyStatus babyStatus) {
+        CameraEvent event = new CameraEvent(Operation.POST, null, begin, end, babyStatus);
 
         this.queue.enqueue(event);
 
         return event.getId();
     }
 
-    public String createSomEvent(String name, LocalDateTime begin, LocalDateTime end, MusicVolume musicVolume, Song song, EquipmentStatus status) {
-        SomEvent event = new SomEvent(name, begin, end, musicVolume, song, status);
+    public String createSomEvent(LocalDateTime begin, LocalDateTime end, MusicVolume musicVolume, Song song, EquipmentStatus status) {
+        SomEvent event = new SomEvent(Operation.POST, null, begin, end, musicVolume, song, status);
 
         this.queue.enqueue(event);
 
         return event.getId();
     }
 
-    public String createMobileEvent(String name, LocalDateTime begin, LocalDateTime end, MobileSpeed mobileSpeed, EquipmentStatus status) {
-        MobileEvent event = new MobileEvent(name, begin, end, mobileSpeed, status);
+    public String createMobileEvent(LocalDateTime begin, LocalDateTime end, MobileSpeed mobileSpeed, EquipmentStatus status) {
+        MobileEvent event = new MobileEvent(Operation.POST, null, begin, end, mobileSpeed, status);
 
         this.queue.enqueue(event);
 
         return event.getId();
     }
 
-    public String createLuzEvent(String name, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
-        LuzEvent event = new LuzEvent(name, begin, end, status);
+    public String createLuzEvent(LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
+        LuzEvent event = new LuzEvent(Operation.POST, null, begin, end, status);
 
         this.queue.enqueue(event);
 
         return event.getId();
     }
 
-    public String scheduleEvent(Event event) {
-        this.scheduler.scheduleEvent(event);
-        return event.getId();
+    /* DELETE */
+
+    public void deleteLuzEvent(String id) {
+        LuzEvent event = new LuzEvent(Operation.DELETE, id);
     }
 
-    public String replaceScheduled(Event event) {
-        this.scheduler.replaceScheduled(event);
-        return event.getId();
+    public void deleteAquecedorEvent(String id) {
+        AquecedorEvent event = new AquecedorEvent(Operation.DELETE, id);
     }
 
-    public String deleteScheduledEvent(String id) {
-        this.scheduler.removeEvent(id);
-        return  id;
+    public void deleteMobileEvent(String id) {
+        MobileEvent event = new MobileEvent(Operation.DELETE, id);
     }
 
-    public AquecedorEvent getAquecedorEvent(String id) {
-        return (AquecedorEvent)queue.getEvent(id);
+    public void deleteSomEvent(String id) {
+        SomEvent event = new SomEvent(Operation.DELETE, id);
     }
 
-    public CameraEvent getCameraEvent(String id) {
-        return (CameraEvent)queue.getEvent(id);
+    public void deleteCameraEvent(String id) {
+        CameraEvent event = new CameraEvent(Operation.DELETE, id);
+    }
+
+    /* PAUSE */
+
+    public void pauseLuzEvent(String id) {
+        LuzEvent event = new LuzEvent(Operation.PAUSE, id);
+    }
+
+    public void pauseAquecedorEvent(String id) {
+        AquecedorEvent event = new AquecedorEvent(Operation.PAUSE, id);
+    }
+
+    public void pauseMobileEvent(String id) {
+        MobileEvent event = new MobileEvent(Operation.PAUSE, id);
+    }
+
+    public void pauseSomEvent(String id) {
+        SomEvent event = new SomEvent(Operation.PAUSE, id);
+    }
+
+    public void pauseCameraEvent(String id) {
+        CameraEvent event = new CameraEvent(Operation.PAUSE, id);
+    }
+
+    /* RESUME */
+
+    public void resumeLuzEvent(String id) {
+        LuzEvent event = new LuzEvent(Operation.RESUME, id);
+    }
+
+    public void resumeAquecedorEvent(String id) {
+        AquecedorEvent event = new AquecedorEvent(Operation.RESUME, id);
+    }
+
+    public void resumeMobileEvent(String id) {
+        MobileEvent event = new MobileEvent(Operation.RESUME, id);
+    }
+
+    public void resumeSomEvent(String id) {
+        SomEvent event = new SomEvent(Operation.RESUME, id);
+    }
+
+    public void resumeCameraEvent(String id) {
+        CameraEvent event = new CameraEvent(Operation.RESUME, id);
     }
 
     public EquipmentStatus getLigthStatus() {

@@ -1,29 +1,39 @@
 package br.ufrgs.inf.data;
 
 import br.ufrgs.inf.data.domain.EquipmentStatus;
+import br.ufrgs.inf.data.domain.EventName;
+import br.ufrgs.inf.data.domain.Operation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class LuzEvent extends DefaultEvent {
 
     private EquipmentStatus equipmentStatus;
 
-    private LuzEvent(String name, LocalDateTime end) {
-        super(name, end);
+
+    public LuzEvent(Operation operation, EventName name, LocalDateTime start) {
+        super(operation, name, start);
     }
 
-    public LuzEvent(String name, LocalDateTime end, EquipmentStatus equipmentStatus) {
-        super(name, end);
+    public LuzEvent(Operation operation, String id) { super (operation, id); };
+
+    public LuzEvent(Operation operation, EventName name, LocalDateTime start, LocalDateTime end) {
+        super(operation, name, start, end);
+    }
+
+    public LuzEvent(Operation operation, EventName name, LocalDateTime end, EquipmentStatus equipmentStatus) {
+        super(operation, name, end);
         this.equipmentStatus = equipmentStatus;
     }
-    public LuzEvent(String name, LocalDateTime begin, LocalDateTime end, EquipmentStatus equipmentStatus) {
-        super(name, begin, end);
+    public LuzEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, EquipmentStatus equipmentStatus) {
+        super(operation, name, begin, end);
         this.equipmentStatus = equipmentStatus;
     }
 
     public static LuzEvent defaultInstance() {
         final LocalDateTime now = LocalDateTime.now();
-        return new LuzEvent("", now, now, EquipmentStatus.values()[0]);
+        return new LuzEvent(Operation.POST, null, now, now, EquipmentStatus.values()[0]);
     }
 
     public void toggleLigthStatus(){
@@ -45,6 +55,10 @@ public class LuzEvent extends DefaultEvent {
 
     @Override
     public String toString(){
-        return "'EquipmentStatus: '" + this.equipmentStatus + "'\n";
+        return "LuzEvent{ " +
+                "operation=" + getOperation() +
+                ", name=" + getName() +
+                ", equipmentStatus=" + equipmentStatus +
+                " }\n";
     }
 }

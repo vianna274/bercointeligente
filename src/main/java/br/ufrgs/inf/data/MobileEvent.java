@@ -1,7 +1,9 @@
 package br.ufrgs.inf.data;
 
 import br.ufrgs.inf.data.domain.EquipmentStatus;
+import br.ufrgs.inf.data.domain.EventName;
 import br.ufrgs.inf.data.domain.MobileSpeed;
+import br.ufrgs.inf.data.domain.Operation;
 
 import java.time.LocalDateTime;
 
@@ -10,25 +12,31 @@ public class MobileEvent extends DefaultEvent {
     private MobileSpeed speed;
     private EquipmentStatus equipmentStatus;
 
-    private MobileEvent(String name, LocalDateTime end) {
-        super(name, end);
+    public MobileEvent(Operation operation, EventName name, LocalDateTime start, LocalDateTime end) {
+        super(operation, name, start, end);
     }
 
-    public MobileEvent(String name, LocalDateTime end, MobileSpeed speed, EquipmentStatus equipmentStatus) {
-        super(name, end);
+    public MobileEvent(Operation operation, EventName name, LocalDateTime start) {
+        super(operation, name, start);
+    }
+
+    public MobileEvent(Operation operation, String id) { super(operation, id); }
+
+    public MobileEvent(Operation operation, EventName name, LocalDateTime end, MobileSpeed speed, EquipmentStatus equipmentStatus) {
+        super(operation, name, end);
         this.equipmentStatus = equipmentStatus;
         this.speed = speed;
     }
 
-    public MobileEvent(String name, LocalDateTime begin, LocalDateTime end, MobileSpeed speed, EquipmentStatus equipmentStatus) {
-        super(name, begin, end);
+    public MobileEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, MobileSpeed speed, EquipmentStatus equipmentStatus) {
+        super(operation, name, begin, end);
         this.equipmentStatus = equipmentStatus;
         this.speed = speed;
     }
 
     public static MobileEvent defaultInstance() {
         final LocalDateTime now = LocalDateTime.now();
-        return new MobileEvent("", now, now, MobileSpeed.values()[0], EquipmentStatus.values()[0]);
+        return new MobileEvent(Operation.POST, null, now, now, MobileSpeed.values()[0], EquipmentStatus.values()[0]);
     }
 
     public MobileSpeed getSpeed() {
@@ -49,6 +57,11 @@ public class MobileEvent extends DefaultEvent {
 
     @Override
     public String toString(){
-        return "'EquipmentStatus: '" + this.equipmentStatus + "', Speed: '" + this.speed + "'\n";
+        return "MobileEvent{ " +
+                "operation=" + getOperation() +
+                ", name=" + getName() +
+                ", mobileSpeed=" + speed +
+                ", equipmentStatus=" + equipmentStatus +
+                " }\n";
     }
 }

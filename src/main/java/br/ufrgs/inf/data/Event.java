@@ -1,5 +1,7 @@
 package br.ufrgs.inf.data;
 
+import br.ufrgs.inf.data.domain.EventName;
+
 import java.time.LocalDateTime;
 
 /**
@@ -7,7 +9,7 @@ import java.time.LocalDateTime;
  */
 public interface Event {
 
-    String getName();
+    EventName getName();
 
     /**
      * Event's id.

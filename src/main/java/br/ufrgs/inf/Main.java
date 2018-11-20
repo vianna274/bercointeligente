@@ -48,8 +48,6 @@ public class Main extends Application {
                 Collections.singletonList(somHandler)
         );
 
-        final Scheduler scheduler = new Scheduler(queue);
-
         final EventManager eventManager = new EventManager();
 
         final EquipmentService equipmentService = new EquipmentService(
@@ -60,24 +58,30 @@ public class Main extends Application {
             som
         );
 
-        final AppController appController = new AppController(queue, scheduler, equipmentService);
+        final AppController appController = new AppController(queue, equipmentService);
 
-        final URL fxml = Paths.get("./src/main/resources/app-main.fxml")
-                              .toUri()
-                              .toURL();
+        appController.wakeUpBaby();
 
-        final FXMLLoader loader = new FXMLLoader(fxml);
+        Thread.sleep(1000);
 
-        final AppUI controller = new AppUI(appController, eventManager);
+        appController.babySleep();
 
-        loader.setController(controller);
-
-        final Parent root = loader.load();
-
-        stage.setTitle("Berço Inteligente");
-        stage.setScene(new Scene(root));
-
-        stage.show();
+//        final URL fxml = Paths.get("./src/main/resources/app-main.fxml")
+//                              .toUri()
+//                              .toURL();
+//
+//        final FXMLLoader loader = new FXMLLoader(fxml);
+//
+//        final AppUI controller = new AppUI(appController, eventManager);
+//
+//        loader.setController(controller);
+//
+//        final Parent root = loader.load();
+//
+//        stage.setTitle("Berço Inteligente");
+//        stage.setScene(new Scene(root));
+//
+//        stage.show();
     }
 
     public static void main(String[] args) {

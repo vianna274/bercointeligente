@@ -1,34 +1,48 @@
 package br.ufrgs.inf.data;
 
+import br.ufrgs.inf.data.domain.EventName;
+import br.ufrgs.inf.data.domain.Operation;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public abstract class DefaultEvent implements Event {
 
-    private String name;
+    private EventName name;
+    private Operation operation;
     private LocalDateTime start;
     private LocalDateTime end;
     private String id;
 
-    public DefaultEvent(String name, LocalDateTime end) {
+    public DefaultEvent(Operation operation, EventName name, LocalDateTime start) {
         this.name = name;
-        this.start = LocalDateTime.now();
-        this.end = end;
+        this.start = start;
+        this.end = null;
         this.id = UUID.randomUUID().toString();
+        this.operation = operation;
     }
 
-    public DefaultEvent(String name, LocalDateTime start, LocalDateTime end) {
-        this(name, end);
+    public DefaultEvent(Operation operation, EventName name, LocalDateTime start, LocalDateTime end) {
         this.start = start;
+        this.operation = operation;
+        this.name = name;
+        this.end = end;
+    }
+
+    public DefaultEvent(Operation operation, String id) {
+        this.operation = operation;
+        this.id = id;
+        this.start = LocalDateTime.now();
+        this.end = null;
     }
 
     public String getId() { return this.id; }
 
-    public String getName() {
-        return name;
+    public EventName getName() {
+        return this.name;
     }
 
-    public void setName(String name) {
+    public void setName(EventName name) {
         this.name = name;
     }
 
@@ -48,7 +62,7 @@ public abstract class DefaultEvent implements Event {
         this.end = end;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Operation getOperation() {
+        return operation;
     }
 }

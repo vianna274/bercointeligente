@@ -187,11 +187,11 @@ public class AppUI {
 
     private void configMobilePane(final Pane mobilePane) {
         this.mobileEvent = MobileEvent.defaultInstance();
-        this.mobileName.setOnAction(igr -> this.mobileEvent.setName(this.mobileName.getText()));
-        this.mobileName.setOnMouseClicked(igr -> this.mobileEvent.setName(this.mobileName.getText()));
-        this.mobileName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.mobileEvent.setName(this.mobileName.getText());
-        });
+//        this.mobileName.setOnAction(igr -> this.mobileEvent.setName(this.mobileName.getText()));
+//        this.mobileName.setOnMouseClicked(igr -> this.mobileEvent.setName(this.mobileName.getText()));
+//        this.mobileName.focusedProperty().addListener((a, b, isFocused) -> {
+//            if (!isFocused) this.mobileEvent.setName(this.mobileName. getText());
+//        });
 
         this.mobileVelocity.getItems().addAll(MobileSpeed.values());
         this.mobileVelocity.getSelectionModel().selectFirst();
@@ -216,11 +216,11 @@ public class AppUI {
 
     private void configSoundPane(final Pane soundPane) {
         this.soundEvent = SomEvent.defaultInstance();
-        this.soundName.setOnAction(igr -> this.soundEvent.setName(this.soundName.getText()));
-        this.soundName.setOnMouseClicked(igr -> this.soundEvent.setName(this.soundName.getText()));
-        this.soundName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.soundEvent.setName(this.soundName.getText());
-        });
+//        this.soundName.setOnAction(igr -> this.soundEvent.setName(this.soundName.getText()));
+//        this.soundName.setOnMouseClicked(igr -> this.soundEvent.setName(this.soundName.getText()));
+//        this.soundName.focusedProperty().addListener((a, b, isFocused) -> {
+//            if (!isFocused) this.soundEvent.setName(this.soundName.getText());
+//        });
 
         this.soundMusic.getItems().addAll(Song.values());
         this.soundMusic.getSelectionModel().selectFirst();
@@ -249,11 +249,11 @@ public class AppUI {
 
     private void configHeaterPane(final Pane heaterPane) {
         this.heaterEvent = AquecedorEvent.defaultInstance();
-        this.heaterName.setOnAction(igr -> this.heaterEvent.setName(this.heaterName.getText()));
-        this.heaterName.setOnMouseClicked(igr -> this.heaterEvent.setName(this.heaterName.getText()));
-        this.heaterName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.heaterEvent.setName(this.heaterName.getText());
-        });
+//        this.heaterName.setOnAction(igr -> this.heaterEvent.setName(this.heaterName.getText()));
+//        this.heaterName.setOnMouseClicked(igr -> this.heaterEvent.setName(this.heaterName.getText()));
+//        this.heaterName.focusedProperty().addListener((a, b, isFocused) -> {
+//            if (!isFocused) this.heaterEvent.setName(this.heaterName.getText());
+//        });
 
         this.heaterTemperature.getItems().addAll(Temperature.values());
         this.heaterTemperature.getSelectionModel().selectFirst();
@@ -278,11 +278,11 @@ public class AppUI {
 
     private void configLightPane(final Pane lightPane) {
         this.lightEvent = LuzEvent.defaultInstance();
-        this.lightName.setOnAction(igr -> this.lightEvent.setName(this.lightName.getText()));
-        this.lightName.setOnMouseClicked(igr -> this.lightEvent.setName(this.heaterName.getText()));
-        this.lightName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.lightEvent.setName(this.lightName.getText());
-        });
+//        this.lightName.setOnAction(igr -> this.lightEvent.setName(this.lightName.getText()));
+//        this.lightName.setOnMouseClicked(igr -> this.lightEvent.setName(this.heaterName.getText()));
+//        this.lightName.focusedProperty().addListener((a, b, isFocused) -> {
+//            if (!isFocused) this.lightEvent.setName(this.lightName.getText());
+//        });
 
         this.lightEquipmentStatus.getItems().addAll(EquipmentStatus.values());
         this.lightEquipmentStatus.getSelectionModel().selectFirst();
@@ -303,11 +303,11 @@ public class AppUI {
 
     private void configCameraPane(final Pane cameraPane) {
         this.cameraEvent = CameraEvent.defaultInstance();
-        this.cameraName.setOnAction(igr -> this.cameraEvent.setName(this.cameraName.getText()));
-        this.cameraName.setOnMouseClicked(igr -> this.heaterEvent.setName(this.heaterName.getText()));
-        this.cameraName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.cameraEvent.setName(this.cameraName.getText());
-        });
+//        this.cameraName.setOnAction(igr -> this.cameraEvent.setName(this.cameraName.getText()));
+//        this.cameraName.setOnMouseClicked(igr -> this.heaterEvent.setName(this.heaterName.getText()));
+//        this.cameraName.focusedProperty().addListener((a, b, isFocused) -> {
+//            if (!isFocused) this.cameraEvent.setName(this.cameraName.getText());
+//        });
 
         this.cameraRecording.getItems().addAll(Recording.values());
         this.cameraRecording.getSelectionModel().selectFirst();
@@ -355,7 +355,7 @@ public class AppUI {
 
         this.nameSoundCol.setCellFactory(EditableTextCell.instance());
         this.nameSoundCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameSoundCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+//        this.nameSoundCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
 
         this.volumeSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getMusicVolume()));
         this.volumeSoundCol.setCellFactory(ComboBoxTableCell.forTableColumn(MusicVolume.values()));
@@ -382,7 +382,7 @@ public class AppUI {
 
         this.nameMobileCol.setCellFactory(EditableTextCell.instance());
         this.nameMobileCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameMobileCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+//        this.nameMobileCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
 
         this.velocityMobileCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getSpeed()));
         this.velocityMobileCol.setCellFactory(ComboBoxTableCell.forTableColumn(MobileSpeed.values()));
@@ -405,7 +405,7 @@ public class AppUI {
 
         this.nameCameraCol.setCellFactory(EditableTextCell.instance());
         this.nameCameraCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameCameraCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+//        this.nameCameraCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
 
         this.recordingCameraCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getRecording()));
         this.recordingCameraCol.setCellFactory(ComboBoxTableCell.forTableColumn(Recording.values()));
@@ -429,7 +429,7 @@ public class AppUI {
 
         this.nameHeaterCol.setCellFactory(EditableTextCell.instance());
         this.nameHeaterCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameHeaterCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+//        this.nameHeaterCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
 
         this.temperatureHeaterCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getTemperature()));
         this.temperatureHeaterCol.setCellFactory(ComboBoxTableCell.forTableColumn(Temperature.values()));
@@ -452,7 +452,7 @@ public class AppUI {
 
         this.nameLightCol.setCellFactory(EditableTextCell.instance());
         this.nameLightCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameLightCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+//        this.nameLightCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
 
         this.equipmentStatusLightCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEquipmentStatus()));
         this.equipmentStatusLightCol.setCellFactory(ComboBoxTableCell.forTableColumn(EquipmentStatus.values()));
@@ -564,34 +564,34 @@ public class AppUI {
 
         final Event enqueued = (Event) selected;
 
-        this.appController.deleteScheduledEvent(enqueued.getId());
+//        this.appController.deleteScheduledEvent(enqueued.getId());
         this.eventManager.remove(enqueued);
     }
 
     public void onClickSaveEvent(final ActionEvent event) throws Exception {
         final Equipment equipment = (Equipment) this.userData.get("type");
 
-        if (equipment == Equipment.CAMERA) {
-            this.eventManager.add(this.cameraEvent);
-            this.appController.scheduleEvent(this.cameraEvent);
-
-        } else if (equipment == Equipment.HEATER) {
-            this.eventManager.add(this.heaterEvent);
-            this.appController.scheduleEvent(this.heaterEvent);
-
-        } else if (equipment == Equipment.LIGHT) {
-            this.eventManager.add(this.lightEvent);
-            this.appController.scheduleEvent(this.lightEvent);
-
-        } else if (equipment == Equipment.MOBILE) {
-            this.eventManager.add(this.mobileEvent);
-            this.appController.scheduleEvent(this.mobileEvent);
-
-        } else if (equipment == Equipment.SOUND) {
-            this.eventManager.add(this.soundEvent);
-            this.appController.scheduleEvent(this.soundEvent);
-
-        }
+//        if (equipment == Equipment.CAMERA) {
+//            this.eventManager.add(this.cameraEvent);
+//            this.appController.scheduleEvent(this.cameraEvent);
+//
+//        } else if (equipment == Equipment.HEATER) {
+//            this.eventManager.add(this.heaterEvent);
+//            this.appController.scheduleEvent(this.heaterEvent);
+//
+//        } else if (equipment == Equipment.LIGHT) {
+//            this.eventManager.add(this.lightEvent);
+//            this.appController.scheduleEvent(this.lightEvent);
+//
+//        } else if (equipment == Equipment.MOBILE) {
+//            this.eventManager.add(this.mobileEvent);
+//            this.appController.scheduleEvent(this.mobileEvent);
+//
+//        } else if (equipment == Equipment.SOUND) {
+//            this.eventManager.add(this.soundEvent);
+//            this.appController.scheduleEvent(this.soundEvent);
+//
+//        }
 
         this.showStage(this.loadConfigStage(), event);
     }
