@@ -1,4 +1,4 @@
-package br.ufrgs.inf.data;
+package br.ufrgs.inf.data.events;
 
 import br.ufrgs.inf.data.domain.*;
 
@@ -12,37 +12,19 @@ public class SomEvent extends DefaultEvent {
 
     public SomEvent(Operation operation, String id) { super(operation, id); }
 
-    public SomEvent(Operation operation, EventName name, LocalDateTime start, LocalDateTime end) {
-        super(operation, name, start, end);
-    }
-
-    public SomEvent(Operation operation, EventName name, LocalDateTime start) {
-        super(operation, name, start);
-    }
-
-    public SomEvent(Operation operation, EventName name, LocalDateTime end, MusicVolume volume, Song currentSong, EquipmentStatus equipmentStatus) {
-        super(operation, name, end);
-        this.equipmentStatus = equipmentStatus;
-        this.musicVolume = volume;
-        this.currentSong = currentSong;
-    }
-
-    public SomEvent(Operation operation, EventName name, LocalDateTime end, Song currentSong, EquipmentStatus equipmentStatus) {
-        super(operation, name, end);
-        this.equipmentStatus = equipmentStatus;
-        this.currentSong = currentSong;
-    }
-
-    public SomEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, MusicVolume volume, Song currentSong, EquipmentStatus equipmentStatus) {
+    public SomEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, MusicVolume volume,
+                    Song currentSong, EquipmentStatus equipmentStatus) {
         super(operation, name, begin, end);
         this.equipmentStatus = equipmentStatus;
         this.musicVolume = volume;
         this.currentSong = currentSong;
     }
 
-    public SomEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, Song currentSong, EquipmentStatus equipmentStatus) {
-        super(operation, name, begin, end);
+    public SomEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, MusicVolume volume,
+                    Song currentSong, EquipmentStatus equipmentStatus, String id) {
+        super(operation, name, begin, end, id);
         this.equipmentStatus = equipmentStatus;
+        this.musicVolume = volume;
         this.currentSong = currentSong;
     }
 

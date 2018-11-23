@@ -10,5 +10,6 @@ public enum Operation {
     DELETE,
     PAUSE,
     RESUME,
-    ACTION
+    ACTION,
+    STATUS_CHANGED
 }

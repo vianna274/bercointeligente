@@ -1,4 +1,4 @@
-package br.ufrgs.inf.data;
+package br.ufrgs.inf.data.events;
 
 import br.ufrgs.inf.data.domain.EventName;
 import br.ufrgs.inf.data.domain.Operation;
@@ -14,19 +14,20 @@ public abstract class DefaultEvent implements Event {
     private LocalDateTime end;
     private String id;
 
-    public DefaultEvent(Operation operation, EventName name, LocalDateTime start) {
-        this.name = name;
-        this.start = start;
-        this.end = null;
-        this.id = UUID.randomUUID().toString();
-        this.operation = operation;
-    }
-
     public DefaultEvent(Operation operation, EventName name, LocalDateTime start, LocalDateTime end) {
         this.start = start;
         this.operation = operation;
         this.name = name;
         this.end = end;
+        this.id = UUID.randomUUID().toString();
+    }
+
+    public DefaultEvent(Operation operation, EventName name, LocalDateTime start, LocalDateTime end, String id) {
+        this.start = start;
+        this.end = end;
+        this.operation = operation;
+        this.id = id;
+        this.name = name;
     }
 
     public DefaultEvent(Operation operation, String id) {

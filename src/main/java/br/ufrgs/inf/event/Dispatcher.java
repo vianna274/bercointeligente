@@ -1,6 +1,6 @@
 package br.ufrgs.inf.event;
 
-import br.ufrgs.inf.data.*;
+import br.ufrgs.inf.data.events.*;
 
 import java.util.List;
 import java.util.concurrent.Executors;

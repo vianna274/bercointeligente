@@ -1,7 +1,9 @@
 package br.ufrgs.inf.handler;
 
-import br.ufrgs.inf.data.AquecedorEvent;
+import br.ufrgs.inf.data.builders.AquecedorEventBuilder;
 import br.ufrgs.inf.data.domain.EquipmentStatus;
+import br.ufrgs.inf.data.domain.Operation;
+import br.ufrgs.inf.data.events.AquecedorEvent;
 import br.ufrgs.inf.data.domain.EventName;
 import br.ufrgs.inf.data.domain.Temperature;
 import br.ufrgs.inf.equipment.Aquecedor;
@@ -12,12 +14,13 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
 
     private Aquecedor aquecedor;
     private Queue queue;
+    private Queue uiQueue;
     private Scheduler<AquecedorEvent> scheduler;
 
-    public AquecedorHandler(Aquecedor aquecedor, Queue queue) {
-        super();
+    public AquecedorHandler(Aquecedor aquecedor, Queue queue, Queue uiQueue) {
         this.aquecedor = aquecedor;
         this.queue = queue;
+        this.uiQueue = uiQueue;
         this.scheduler = new Scheduler<>();
         this.scheduler.setStartEventCallback(this::handleStartEvent);
         this.scheduler.setEndEventCallback(this::handleEndEvent);
@@ -28,6 +31,10 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
     @Override
     public void onEvent(AquecedorEvent event) {
         this.scheduler.scheduleEvent(event);
+    }
+
+    public void sendUiQueue(AquecedorEvent event) {
+        this.uiQueue.enqueue(event);
     }
 
     public Integer handlePauseEvent(AquecedorEvent event) {
@@ -45,31 +52,52 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
     public Integer handleEndEvent(AquecedorEvent event) {
         this.aquecedor.toggle();
         this.aquecedor.changeTemperature(Temperature.COLD);
+
+        sendUiQueue(new AquecedorEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(aquecedor.getEquipmentStatus())
+                .temperature(event.getTemperature())
+                .build());
+
         return 0;
     }
 
     public Integer handleStartEvent(AquecedorEvent event) {
+        AquecedorEventBuilder eventBuilder = new AquecedorEventBuilder();
+
         if (event.getName() == EventName.BABY_SLEPT) {
             System.out.println("[Aquecedor Handler] : BABY_SLEPT");
             aquecedor.turnOff();
             aquecedor.changeTemperature(Temperature.COLD);
-            return 0;
-        }
-        if (event.getName() == EventName.BABY_WAKE_UP) {
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .equipmentStatus(EquipmentStatus.OFF)
+                    .temperature(Temperature.COLD);
+        } else if (event.getName() == EventName.BABY_WAKE_UP) {
             System.out.println("[Aquecedor Handler] : BABY_WAKE_UP");
             aquecedor.turnOn();
             aquecedor.changeTemperature(Temperature.AMBIENT);
-            return 0;
-        }
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .equipmentStatus(EquipmentStatus.ON)
+                    .temperature(Temperature.AMBIENT);
+        } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
-        if(event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
-
-        if(event.getTemperature() != aquecedor.getTemperature()) {
+        if (event.getTemperature() != null && event.getTemperature() != aquecedor.getTemperature()) {
             aquecedor.changeTemperature(event.getTemperature());
+            eventBuilder
+                    .temperature(event.getTemperature())
+                    .operation(Operation.STATUS_CHANGED);
         }
-        if(event.getEquipmentStatus() != aquecedor.getEquipmentStatus()){
+        if (event.getEquipmentStatus() != null && event.getEquipmentStatus() != aquecedor.getEquipmentStatus()) {
             aquecedor.toggle();
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .equipmentStatus(event.getEquipmentStatus());
         }
+
+        this.sendUiQueue(eventBuilder.build());
+
         return 0;
     }
 }

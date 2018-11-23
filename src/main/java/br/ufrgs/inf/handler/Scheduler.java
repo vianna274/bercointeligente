@@ -1,8 +1,6 @@
 package br.ufrgs.inf.handler;
 
-import br.ufrgs.inf.data.DefaultEvent;
-import br.ufrgs.inf.data.Event;
-import br.ufrgs.inf.event.Queue;
+import br.ufrgs.inf.data.events.DefaultEvent;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,6 +36,7 @@ public class Scheduler<T extends DefaultEvent> {
             case PAUSE: this.pauseEvent(event); break;
             case RESUME: this.resumeEvent(event); break;
             case ACTION: startEvent(event); break;
+            case STATUS_CHANGED: System.out.println("[Warn] Schedule recebeu STATUS_CHANGED"); break;
         }
     }
 

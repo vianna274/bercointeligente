@@ -30,15 +30,17 @@ public class Main extends Application {
         final Luz luz = new Luz();
 
         final Queue queue = new Queue();
+        final Queue uiQueue = new Queue(); // TODO Queue que vai ficar recebendo as mudanças nos componentes
+        // TODO usar ela para atualizar o front
 
         final LocalDateTime start = LocalDateTime.now().plusMinutes(5);
         final LocalDateTime end = start.plusMinutes(5);
 
-        final AquecedorHandler aquecedorHandler = new AquecedorHandler(aquecedor, queue);
-        final CameraHandler cameraHandler = new CameraHandler(camera, queue);
-        final MobileHandler mobileHandler = new MobileHandler(mobile, queue);
-        final SomHandler somHandler = new SomHandler(som, queue);
-        final LuzHandler luzHandler = new LuzHandler(luz, queue);
+        final AquecedorHandler aquecedorHandler = new AquecedorHandler(aquecedor, queue, uiQueue);
+        final CameraHandler cameraHandler = new CameraHandler(camera, queue, uiQueue);
+        final MobileHandler mobileHandler = new MobileHandler(mobile, queue, uiQueue);
+        final SomHandler somHandler = new SomHandler(som, queue, uiQueue);
+        final LuzHandler luzHandler = new LuzHandler(luz, queue, uiQueue);
 
         new Dispatcher(queue,
                 Collections.singletonList(aquecedorHandler),
@@ -62,7 +64,7 @@ public class Main extends Application {
 
         appController.wakeUpBaby();
 
-        Thread.sleep(1000);
+        Thread.sleep(6000);
 
         appController.babySleep();
 

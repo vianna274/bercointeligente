@@ -1,7 +1,8 @@
 package br.ufrgs.inf.handler;
 
-import br.ufrgs.inf.data.MobileEvent;
-import br.ufrgs.inf.data.domain.EquipmentStatus;
+import br.ufrgs.inf.data.builders.MobileEventBuilder;
+import br.ufrgs.inf.data.domain.Operation;
+import br.ufrgs.inf.data.events.MobileEvent;
 import br.ufrgs.inf.data.domain.EventName;
 import br.ufrgs.inf.data.domain.MobileSpeed;
 import br.ufrgs.inf.equipment.Mobile;
@@ -12,11 +13,13 @@ public class MobileHandler implements EventListener<MobileEvent> {
 
     private Mobile mobile;
     private Queue queue;
+    private Queue uiQueue;
     private Scheduler<MobileEvent> scheduler;
 
-    public MobileHandler(Mobile mobile, Queue queue) {
+    public MobileHandler(Mobile mobile, Queue queue, Queue uiQueue) {
         this.mobile = mobile;
         this.queue = queue;
+        this.uiQueue = uiQueue;
         this.scheduler = new Scheduler<>();
         this.scheduler.setStartEventCallback(this::handleStartEvent);
         this.scheduler.setEndEventCallback(this::handleEndEvent);
@@ -27,6 +30,10 @@ public class MobileHandler implements EventListener<MobileEvent> {
     @Override
     public void onEvent(MobileEvent event) {
         this.scheduler.scheduleEvent(event);
+    }
+
+    public void sendUiQueue(MobileEvent event) {
+        this.uiQueue.enqueue(event);
     }
 
     public Integer handlePauseEvent(MobileEvent event) {
@@ -43,35 +50,55 @@ public class MobileHandler implements EventListener<MobileEvent> {
 
     public Integer handleEndEvent(MobileEvent event) {
         this.mobile.toggle();
+        this.sendUiQueue(new MobileEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(this.mobile.getEquipmentStatus())
+                .build());
         return 0;
     }
 
     public Integer handleStartEvent(MobileEvent event) {
+        MobileEventBuilder eventBuilder = new MobileEventBuilder();
+
         if (event.getName() == EventName.BABY_TIRED) {
             System.out.println("[Mobile Handler] : BABY_TIRED");
             mobile.turnOn();
             mobile.setSpeed(MobileSpeed.SLOW);
-            return 0;
-        }
-        if (event.getName() == EventName.BABY_SLEPT) {
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .equipmentStatus(mobile.getEquipmentStatus())
+                    .mobileSpeed(mobile.getSpeed());
+        } else if (event.getName() == EventName.BABY_SLEPT) {
             System.out.println("[Mobile Handler] : BABY_SLEPT");
             mobile.turnOff();
-            return 0;
-        }
-        if (event.getName() == EventName.BABY_MOVING) {
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .equipmentStatus(mobile.getEquipmentStatus());
+        } else if (event.getName() == EventName.BABY_MOVING) {
             System.out.println("[Mobile Handler] : BABY_MOVING");
             mobile.turnOn();
             mobile.setSpeed(MobileSpeed.FAST);
-        }
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .equipmentStatus(mobile.getEquipmentStatus())
+                    .mobileSpeed(mobile.getSpeed());
+        } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
-        if(event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
-
-        if(event.getEquipmentStatus() != mobile.getEquipmentStatus()){
+        if (event.getEquipmentStatus() != mobile.getEquipmentStatus()) {
             mobile.toggle();
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .equipmentStatus(mobile.getEquipmentStatus());
         }
-        if(event.getSpeed() !=  mobile.getSpeed()) {
+        if (event.getSpeed() != mobile.getSpeed()) {
             mobile.setSpeed(event.getSpeed());
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .mobileSpeed(mobile.getSpeed());
         }
+
+        sendUiQueue(eventBuilder.build());
+
         return 0;
     }
 }

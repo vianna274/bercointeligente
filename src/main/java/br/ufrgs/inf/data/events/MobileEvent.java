@@ -1,4 +1,4 @@
-package br.ufrgs.inf.data;
+package br.ufrgs.inf.data.events;
 
 import br.ufrgs.inf.data.domain.EquipmentStatus;
 import br.ufrgs.inf.data.domain.EventName;
@@ -12,24 +12,18 @@ public class MobileEvent extends DefaultEvent {
     private MobileSpeed speed;
     private EquipmentStatus equipmentStatus;
 
-    public MobileEvent(Operation operation, EventName name, LocalDateTime start, LocalDateTime end) {
-        super(operation, name, start, end);
-    }
-
-    public MobileEvent(Operation operation, EventName name, LocalDateTime start) {
-        super(operation, name, start);
-    }
-
     public MobileEvent(Operation operation, String id) { super(operation, id); }
 
-    public MobileEvent(Operation operation, EventName name, LocalDateTime end, MobileSpeed speed, EquipmentStatus equipmentStatus) {
-        super(operation, name, end);
+    public MobileEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, MobileSpeed speed,
+                       EquipmentStatus equipmentStatus) {
+        super(operation, name, begin, end);
         this.equipmentStatus = equipmentStatus;
         this.speed = speed;
     }
 
-    public MobileEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, MobileSpeed speed, EquipmentStatus equipmentStatus) {
-        super(operation, name, begin, end);
+    public MobileEvent(Operation operation, EventName name, LocalDateTime begin, LocalDateTime end, MobileSpeed speed,
+                       EquipmentStatus equipmentStatus, String id) {
+        super(operation, name, begin, end, id);
         this.equipmentStatus = equipmentStatus;
         this.speed = speed;
     }

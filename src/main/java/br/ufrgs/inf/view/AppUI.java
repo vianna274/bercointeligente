@@ -2,8 +2,8 @@ package br.ufrgs.inf.view;
 
 import br.ufrgs.inf.controller.AppController;
 import br.ufrgs.inf.controller.EventManager;
-import br.ufrgs.inf.data.*;
 import br.ufrgs.inf.data.domain.*;
+import br.ufrgs.inf.data.events.*;
 import br.ufrgs.inf.view.components.DateTimePickerCell;
 import br.ufrgs.inf.view.components.EditableTextCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;

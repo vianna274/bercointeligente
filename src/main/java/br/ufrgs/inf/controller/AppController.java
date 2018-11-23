@@ -1,10 +1,11 @@
 package br.ufrgs.inf.controller;
 
-import br.ufrgs.inf.data.*;
+import br.ufrgs.inf.data.builders.*;
 import br.ufrgs.inf.data.domain.*;
+import br.ufrgs.inf.data.events.*;
 import br.ufrgs.inf.equipment.BabyBottle;
 import br.ufrgs.inf.event.Queue;
-import br.ufrgs.inf.handler.Scheduler;
+import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -69,19 +70,32 @@ public class AppController {
     /* POST */
 
     public void wakeUpBaby() {
-        CameraEvent event = new CameraEvent(Operation.ACTION, EventName.BABY_WAKE_UP, LocalDateTime.now());
+        CameraEvent event = new CameraEventBuilder()
+                .operation(Operation.ACTION)
+                .eventName(EventName.BABY_WAKE_UP)
+                .start(LocalDateTime.now())
+                .build();
 
         this.queue.enqueue(event);
     }
 
     public void babySleep() {
-        CameraEvent event = new CameraEvent(Operation.ACTION, EventName.BABY_SLEPT, LocalDateTime.now());
+        CameraEvent event = new CameraEventBuilder()
+                .operation(Operation.ACTION)
+                .eventName(EventName.BABY_SLEPT)
+                .start(LocalDateTime.now())
+                .build();
 
         this.queue.enqueue(event);
     }
 
-    public String createAquecedorEvent(LocalDateTime begin, LocalDateTime end, EquipmentStatus status) throws Exception {
-        AquecedorEvent event = new AquecedorEvent(Operation.POST, null, begin, end, status);
+    public String createAquecedorEvent(LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
+        AquecedorEvent event = new AquecedorEventBuilder()
+                .operation(Operation.POST)
+                .start(begin)
+                .end(end)
+                .equipmentStatus(status)
+                .build();
 
         this.queue.enqueue(event);
 
@@ -89,7 +103,13 @@ public class AppController {
     }
 
     public String createAquecedorEvent(LocalDateTime begin, LocalDateTime end, Temperature temperature, EquipmentStatus status) {
-        AquecedorEvent event = new AquecedorEvent(Operation.POST, null, begin, end, temperature, status);
+        AquecedorEvent event = new AquecedorEventBuilder()
+                .operation(Operation.POST)
+                .start(begin)
+                .end(end)
+                .temperature(temperature)
+                .equipmentStatus(status)
+                .build();
 
         this.queue.enqueue(event);
 
@@ -97,7 +117,13 @@ public class AppController {
     }
 
     public String createCameraEvent(LocalDateTime begin, LocalDateTime end, Recording recording, EquipmentStatus status) {
-        CameraEvent event = new CameraEvent(Operation.POST, null, begin, end, recording, status);
+        CameraEvent event = new CameraEventBuilder()
+                .operation(Operation.POST)
+                .start(begin)
+                .end(end)
+                .recording(recording)
+                .equipmentStatus(status)
+                .build();
 
         this.queue.enqueue(event);
 
@@ -105,7 +131,12 @@ public class AppController {
     }
 
     public String createCameraEvent(LocalDateTime begin, LocalDateTime end, BabyStatus babyStatus) {
-        CameraEvent event = new CameraEvent(Operation.POST, null, begin, end, babyStatus);
+        CameraEvent event = new CameraEventBuilder()
+                .operation(Operation.POST)
+                .start(begin)
+                .end(end)
+                .babyStatus(babyStatus)
+                .build();
 
         this.queue.enqueue(event);
 
@@ -156,6 +187,111 @@ public class AppController {
 
     public void deleteCameraEvent(String id) {
         CameraEvent event = new CameraEvent(Operation.DELETE, id);
+    }
+
+    /* PUT */
+
+    public String createAquecedorEvent(String id, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
+        AquecedorEvent event = new AquecedorEventBuilder()
+                .operation(Operation.PUT)
+                .start(begin)
+                .end(end)
+                .equipmentStatus(status)
+                .id(id)
+                .build();
+
+        this.queue.enqueue(event);
+
+        return event.getId();
+    }
+
+    public String createAquecedorEvent(String id, LocalDateTime begin, LocalDateTime end, Temperature temperature, EquipmentStatus status) {
+        AquecedorEvent event = new AquecedorEventBuilder()
+                .operation(Operation.PUT)
+                .start(begin)
+                .end(end)
+                .temperature(temperature)
+                .equipmentStatus(status)
+                .id(id)
+                .build();
+
+        this.queue.enqueue(event);
+
+        return event.getId();
+    }
+
+    public String createCameraEvent(String id, LocalDateTime begin, LocalDateTime end, Recording recording, EquipmentStatus status) {
+        CameraEvent event = new CameraEventBuilder()
+                .operation(Operation.PUT)
+                .start(begin)
+                .end(end)
+                .recording(recording)
+                .equipmentStatus(status)
+                .id(id)
+                .build();
+
+        this.queue.enqueue(event);
+
+        return event.getId();
+    }
+
+    public String createCameraEvent(String id, LocalDateTime begin, LocalDateTime end, BabyStatus babyStatus) {
+        CameraEvent event = new CameraEventBuilder()
+                .operation(Operation.PUT)
+                .start(begin)
+                .end(end)
+                .babyStatus(babyStatus)
+                .id(id)
+                .build();
+
+        this.queue.enqueue(event);
+
+        return event.getId();
+    }
+
+    public String createSomEvent(String id, LocalDateTime begin, LocalDateTime end, MusicVolume musicVolume, Song song, EquipmentStatus status) {
+        SomEvent event = new SomEventBuilder()
+                .operation(Operation.PUT)
+                .start(begin)
+                .end(end)
+                .musicVolume(musicVolume)
+                .song(song)
+                .equipmentStatus(status)
+                .id(id)
+                .build();
+
+        this.queue.enqueue(event);
+
+        return event.getId();
+    }
+
+    public String createMobileEvent(String id, LocalDateTime begin, LocalDateTime end, MobileSpeed mobileSpeed, EquipmentStatus status) {
+        MobileEvent event = new MobileEventBuilder()
+                .operation(Operation.PUT)
+                .start(begin)
+                .end(end)
+                .mobileSpeed(mobileSpeed)
+                .equipmentStatus(status)
+                .id(id)
+                .build();
+
+        this.queue.enqueue(event);
+
+        return event.getId();
+    }
+
+    public String createLuzEvent(String id, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
+        LuzEvent event = new LuzEventBuilder()
+                .operation(Operation.PUT)
+                .start(begin)
+                .end(end)
+                .equipmentStatus(status)
+                .id(id)
+                .build();
+
+        this.queue.enqueue(event);
+
+        return event.getId();
     }
 
     /* PAUSE */

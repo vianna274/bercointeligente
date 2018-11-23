@@ -1,4 +1,4 @@
-package br.ufrgs.inf.data;
+package br.ufrgs.inf.data.events;
 
 import br.ufrgs.inf.data.domain.EventName;
 
