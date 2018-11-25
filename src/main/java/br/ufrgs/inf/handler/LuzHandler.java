@@ -48,6 +48,7 @@ public class LuzHandler implements EventListener<LuzEvent> {
         this.luz.toggle();
         this.sendUiQueue(new LuzEventBuilder()
                 .operation(Operation.STATUS_CHANGED)
+                .id(event.getId())
                 .equipmentStatus(luz.getEquipmentStatus())
                 .build());
         return 0;
@@ -68,12 +69,14 @@ public class LuzHandler implements EventListener<LuzEvent> {
             luz.turnOn();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(luz.getEquipmentStatus());
         } else if (event.getName() == EventName.BABY_SLEPT) {
             System.out.println("[Luz Handler] : BABY_SLEPT");
             luz.turnOff();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(luz.getEquipmentStatus());
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
@@ -81,6 +84,7 @@ public class LuzHandler implements EventListener<LuzEvent> {
             luz.toggle();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(luz.getEquipmentStatus());
         }
 

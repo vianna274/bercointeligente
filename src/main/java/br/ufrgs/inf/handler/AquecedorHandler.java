@@ -57,6 +57,7 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
                 .operation(Operation.STATUS_CHANGED)
                 .equipmentStatus(aquecedor.getEquipmentStatus())
                 .temperature(event.getTemperature())
+                .id(event.getId())
                 .build());
 
         return 0;
@@ -72,6 +73,7 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
                     .equipmentStatus(EquipmentStatus.OFF)
+                    .id(event.getId())
                     .temperature(Temperature.COLD);
         } else if (event.getName() == EventName.BABY_WAKE_UP) {
             System.out.println("[Aquecedor Handler] : BABY_WAKE_UP");
@@ -80,6 +82,7 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
                     .equipmentStatus(EquipmentStatus.ON)
+                    .id(event.getId())
                     .temperature(Temperature.AMBIENT);
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
@@ -87,12 +90,14 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
             aquecedor.changeTemperature(event.getTemperature());
             eventBuilder
                     .temperature(event.getTemperature())
+                    .id(event.getId())
                     .operation(Operation.STATUS_CHANGED);
         }
         if (event.getEquipmentStatus() != null && event.getEquipmentStatus() != aquecedor.getEquipmentStatus()) {
             aquecedor.toggle();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(event.getEquipmentStatus());
         }
 

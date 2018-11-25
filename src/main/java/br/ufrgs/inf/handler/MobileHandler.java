@@ -52,6 +52,7 @@ public class MobileHandler implements EventListener<MobileEvent> {
         this.mobile.toggle();
         this.sendUiQueue(new MobileEventBuilder()
                 .operation(Operation.STATUS_CHANGED)
+                .id(event.getId())
                 .equipmentStatus(this.mobile.getEquipmentStatus())
                 .build());
         return 0;
@@ -66,6 +67,7 @@ public class MobileHandler implements EventListener<MobileEvent> {
             mobile.setSpeed(MobileSpeed.SLOW);
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(mobile.getEquipmentStatus())
                     .mobileSpeed(mobile.getSpeed());
         } else if (event.getName() == EventName.BABY_SLEPT) {
@@ -73,6 +75,7 @@ public class MobileHandler implements EventListener<MobileEvent> {
             mobile.turnOff();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(mobile.getEquipmentStatus());
         } else if (event.getName() == EventName.BABY_MOVING) {
             System.out.println("[Mobile Handler] : BABY_MOVING");
@@ -80,6 +83,7 @@ public class MobileHandler implements EventListener<MobileEvent> {
             mobile.setSpeed(MobileSpeed.FAST);
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(mobile.getEquipmentStatus())
                     .mobileSpeed(mobile.getSpeed());
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
@@ -88,12 +92,14 @@ public class MobileHandler implements EventListener<MobileEvent> {
             mobile.toggle();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(mobile.getEquipmentStatus());
         }
         if (event.getSpeed() != mobile.getSpeed()) {
             mobile.setSpeed(event.getSpeed());
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .mobileSpeed(mobile.getSpeed());
         }
 

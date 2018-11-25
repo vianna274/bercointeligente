@@ -51,6 +51,7 @@ public class SomHandler implements EventListener<SomEvent> {
         this.sendUiQueue(new SomEventBuilder()
                 .operation(Operation.STATUS_CHANGED)
                 .equipmentStatus(som.getEquipmentStatus())
+                .id(event.getId())
                 .build());
         return 0;
     }
@@ -68,6 +69,7 @@ public class SomHandler implements EventListener<SomEvent> {
                     .operation(Operation.STATUS_CHANGED)
                     .musicVolume(MusicVolume.LOW)
                     .song(Song.FIRST)
+                    .id(event.getId())
                     .equipmentStatus(EquipmentStatus.ON);
         } else if (event.getName() == EventName.BABY_SLEPT) {
             System.out.println("[Som Handler] : BABY_SLEPT");
@@ -75,6 +77,7 @@ public class SomHandler implements EventListener<SomEvent> {
 
             somEventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(EquipmentStatus.OFF);
         } else if (event.getName() == EventName.BABY_MOVING) {
             System.out.println("[Som Handler] : BABY_MOVING");
@@ -86,6 +89,7 @@ public class SomHandler implements EventListener<SomEvent> {
                     .operation(Operation.STATUS_CHANGED)
                     .musicVolume(MusicVolume.MEDIUM)
                     .song(Song.SECOND)
+                    .id(event.getId())
                     .equipmentStatus(EquipmentStatus.ON);
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
@@ -94,6 +98,7 @@ public class SomHandler implements EventListener<SomEvent> {
             som.toggle();
             somEventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(som.getEquipmentStatus());
         }
 
@@ -101,6 +106,7 @@ public class SomHandler implements EventListener<SomEvent> {
             som.setCurrentSong(event.getCurrentSong());
             somEventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .song(som.getCurrentSong());
         }
 
@@ -108,6 +114,7 @@ public class SomHandler implements EventListener<SomEvent> {
             som.setMusicVolume(event.getMusicVolume());
             somEventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .musicVolume(som.getMusicVolume());
         }
 

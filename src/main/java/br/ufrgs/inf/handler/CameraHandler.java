@@ -119,6 +119,7 @@ public class CameraHandler implements EventListener<CameraEvent> {
             this.handleBabyWokeUp();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .babyStatus(BabyStatus.AWAKING);
 
         } else if (event.getName() == EventName.BABY_SLEPT) {
@@ -127,6 +128,7 @@ public class CameraHandler implements EventListener<CameraEvent> {
             this.handleBabySleeping();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .babyStatus(BabyStatus.SLEEPING);
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
@@ -134,12 +136,14 @@ public class CameraHandler implements EventListener<CameraEvent> {
             camera.toggle();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(event.getEquipmentStatus());
         }
         if (event.getRecording() != null) {
             camera.recordingControl(event.getRecording());
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .recording(event.getRecording());
         }
 
@@ -159,6 +163,7 @@ public class CameraHandler implements EventListener<CameraEvent> {
                     this.handleBabySleeping();
                     eventBuilder
                             .operation(Operation.STATUS_CHANGED)
+                            .id(event.getId())
                             .babyStatus(BabyStatus.SLEEPING);
                     break;
 
@@ -169,6 +174,7 @@ public class CameraHandler implements EventListener<CameraEvent> {
                     this.handleBabyWokeUp();
                     eventBuilder
                             .operation(Operation.STATUS_CHANGED)
+                            .id(event.getId())
                             .babyStatus(BabyStatus.AWAKE);
                     break;
             }
@@ -177,6 +183,7 @@ public class CameraHandler implements EventListener<CameraEvent> {
             this.camera.toggle();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
                     .equipmentStatus(camera.getEquipmentStatus());
         }
 
