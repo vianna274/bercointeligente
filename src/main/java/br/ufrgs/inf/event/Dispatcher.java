@@ -2,6 +2,7 @@ package br.ufrgs.inf.event;
 
 import br.ufrgs.inf.data.events.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,6 +16,16 @@ public class Dispatcher {
     private List<EventListener<LuzEvent>> luzListeners;
     private List<EventListener<MobileEvent>> mobileListeners;
     private List<EventListener<SomEvent>> somListeners;
+    private List<EventListener<DefaultEvent>> uiListeners;
+    private boolean isUi;
+
+    public Dispatcher(Queue queue, List<EventListener<DefaultEvent>> uiListeners) {
+        this.queue = queue;
+        this.uiListeners = uiListeners;
+
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(this::dispatch, 0, 500, TimeUnit.MILLISECONDS);
+    }
 
     public Dispatcher(Queue queue,
                       List<EventListener<AquecedorEvent>> aquecedorListeners,
@@ -22,16 +33,15 @@ public class Dispatcher {
                       List<EventListener<LuzEvent>> luzListeners,
                       List<EventListener<MobileEvent>> mobileListeners,
                       List<EventListener<SomEvent>> somListeners) {
-
         this.queue = queue;
         this.aquecedorListeners = aquecedorListeners;
         this.cameraListeners = cameraListeners;
         this.luzListeners = luzListeners;
         this.mobileListeners = mobileListeners;
         this.somListeners = somListeners;
+        this.uiListeners = new ArrayList<>();
 
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-
         executorService.scheduleAtFixedRate(this::dispatch, 0, 500, TimeUnit.MILLISECONDS);
     }
 
@@ -39,6 +49,11 @@ public class Dispatcher {
         Event event = queue.dequeue();
 
         if(event == null) return;
+
+        if (!uiListeners.isEmpty() && event instanceof DefaultEvent) {
+            uiListeners.forEach(l -> l.onEvent((DefaultEvent) event));
+            return;
+        }
 
         if (event instanceof AquecedorEvent) {
             aquecedorListeners.forEach(listener -> listener.onEvent((AquecedorEvent) event));

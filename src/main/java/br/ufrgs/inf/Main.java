@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Main extends Application {
@@ -30,11 +31,7 @@ public class Main extends Application {
         final Luz luz = new Luz();
 
         final Queue queue = new Queue();
-        final Queue uiQueue = new Queue(); // TODO Queue que vai ficar recebendo as mudanças nos componentes
-        // TODO usar ela para atualizar o front
-
-        final LocalDateTime start = LocalDateTime.now().plusMinutes(5);
-        final LocalDateTime end = start.plusMinutes(5);
+        final Queue uiQueue = new Queue();
 
         final AquecedorHandler aquecedorHandler = new AquecedorHandler(aquecedor, queue, uiQueue);
         final CameraHandler cameraHandler = new CameraHandler(camera, queue, uiQueue);
@@ -43,11 +40,11 @@ public class Main extends Application {
         final LuzHandler luzHandler = new LuzHandler(luz, queue, uiQueue);
 
         new Dispatcher(queue,
-                Collections.singletonList(aquecedorHandler),
-                Collections.singletonList(cameraHandler),
-                Collections.singletonList(luzHandler),
-                Collections.singletonList(mobileHandler),
-                Collections.singletonList(somHandler)
+            Collections.singletonList(aquecedorHandler),
+            Collections.singletonList(cameraHandler),
+            Collections.singletonList(luzHandler),
+            Collections.singletonList(mobileHandler),
+            Collections.singletonList(somHandler)
         );
 
         final EventManager eventManager = new EventManager();
@@ -62,28 +59,24 @@ public class Main extends Application {
 
         final AppController appController = new AppController(queue, equipmentService);
 
-        appController.wakeUpBaby();
+        final URL fxml = Paths.get("./src/main/resources/app-main.fxml")
+                              .toUri()
+                              .toURL();
 
-        Thread.sleep(6000);
+        final FXMLLoader loader = new FXMLLoader(fxml);
 
-        appController.babySleep();
+        final AppUI controller = new AppUI(appController, eventManager);
 
-//        final URL fxml = Paths.get("./src/main/resources/app-main.fxml")
-//                              .toUri()
-//                              .toURL();
-//
-//        final FXMLLoader loader = new FXMLLoader(fxml);
-//
-//        final AppUI controller = new AppUI(appController, eventManager);
-//
-//        loader.setController(controller);
-//
-//        final Parent root = loader.load();
-//
-//        stage.setTitle("Berço Inteligente");
-//        stage.setScene(new Scene(root));
-//
-//        stage.show();
+        new Dispatcher(uiQueue, Collections.singletonList(controller));
+
+        loader.setController(controller);
+
+        final Parent root = loader.load();
+
+        stage.setTitle("Berço Inteligente");
+        stage.setScene(new Scene(root));
+
+        stage.show();
     }
 
     public static void main(String[] args) {

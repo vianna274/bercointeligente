@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="474.0" prefWidth="1180.0" VBox.vgrow="ALWAYS">
          <children>
@@ -21,17 +21,16 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button layoutX="47.0" layoutY="417.0" mnemonicParsing="false" onAction="#onClickBackApp" prefHeight="57.0" prefWidth="251.0" text="Voltar" />
-            <Button layoutX="378.0" layoutY="417.0" mnemonicParsing="false" onAction="#onClickToggleBaby" prefHeight="57.0" prefWidth="251.0" text="Toggle Baby" />
+            <Button layoutX="47.0" layoutY="432.0" mnemonicParsing="false" onAction="#onClickBackApp" prefHeight="57.0" prefWidth="251.0" text="Voltar" />
+            <Button layoutX="378.0" layoutY="432.0" mnemonicParsing="false" onAction="#onClickToggleBaby" prefHeight="57.0" prefWidth="251.0" text="Toggle Baby" />
             <ComboBox fx:id="type" layoutX="60.0" layoutY="66.0" onAction="#onTypeChanged" prefHeight="42.0" prefWidth="203.0" />
-            <Label layoutX="670.0" layoutY="66.0" prefHeight="42.0" prefWidth="104.0" text="Status Bebe:">
+            <Label layoutX="670.0" layoutY="66.0" prefHeight="42.0" prefWidth="120.0" text="Bebe:">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
             <TableView fx:id="tableViewHeater" layoutX="11.0" layoutY="128.0" prefHeight="290.0" prefWidth="639.0">
               <columns>
-                <TableColumn fx:id="nameHeaterCol" prefWidth="75.0" text="Name" />
                 <TableColumn fx:id="temperatureHeaterCol" prefWidth="75.0" text="Temperature" />
                   <TableColumn fx:id="equipmentStatusHeaterCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startHeaterCol" prefWidth="75.0" text="Inicio" />
@@ -43,7 +42,6 @@
             </TableView>
             <TableView fx:id="tableViewMobile" layoutX="11.0" layoutY="128.0" prefHeight="290.0" prefWidth="639.0">
                <columns>
-                  <TableColumn fx:id="nameMobileCol" prefWidth="75.0" text="Name" />
                   <TableColumn fx:id="velocityMobileCol" prefWidth="75.0" text="Velocidade" />
                   <TableColumn fx:id="equipmentStatusMobileCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startMobileCol" prefWidth="75.0" text="Inicio" />
@@ -55,7 +53,6 @@
             </TableView>
             <TableView fx:id="tableViewLight" layoutX="11.0" layoutY="128.0" prefHeight="290.0" prefWidth="639.0">
                <columns>
-                  <TableColumn fx:id="nameLightCol" prefWidth="75.0" text="Name" />
                   <TableColumn fx:id="equipmentStatusLightCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startLightCol" prefWidth="75.0" text="Inicio" />
                   <TableColumn fx:id="endLightCol" prefWidth="75.0" text="Fim" />
@@ -66,7 +63,6 @@
             </TableView>
             <TableView fx:id="tableViewSound" layoutX="11.0" layoutY="128.0" prefHeight="290.0" prefWidth="639.0">
                <columns>
-                  <TableColumn fx:id="nameSoundCol" prefWidth="75.0" text="Name" />
                   <TableColumn fx:id="volumeSoundCol" prefWidth="75.0" text="Volume" />
                   <TableColumn fx:id="musicSoundCol" prefWidth="75.0" text="Musica" />
                   <TableColumn fx:id="equipmentStatusSoundCol" prefWidth="75.0" text="Status" />
@@ -79,7 +75,6 @@
             </TableView>
             <TableView fx:id="tableViewCamera" layoutY="127.0" prefHeight="290.0" prefWidth="660.0">
                <columns>
-                  <TableColumn fx:id="nameCameraCol" prefWidth="75.0" text="Name" />
                   <TableColumn fx:id="recordingCameraCol" prefWidth="75.0" text="Gravando" />
                   <TableColumn fx:id="equipmentStatusCameraCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startCameraCol" prefWidth="75.0" text="Inicio" />
@@ -91,7 +86,7 @@
             </TableView>
             <Button fx:id="addEvent" layoutX="364.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickAdd" prefHeight="42.0" prefWidth="128.0" text="Adicionar" />
             <Button fx:id="deteleEvent" layoutX="503.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickDeleteEvent" prefHeight="42.0" prefWidth="128.0" text="Excluir" />
-            <Label fx:id="babyStatus" layoutX="774.0" layoutY="66.0" prefHeight="42.0" prefWidth="120.0">
+            <Label fx:id="babyStatus" layoutX="819.0" layoutY="66.0" prefHeight="42.0" prefWidth="175.0">
                <font>
                   <Font size="17.0" />
                </font>
@@ -101,12 +96,22 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="670.0" layoutY="129.0" prefHeight="42.0" prefWidth="149.0" text="Status Mamadeira:">
+            <Label layoutX="670.0" layoutY="129.0" prefHeight="42.0" prefWidth="120.0" text="Mamadeira:">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <Label fx:id="babyBottleStatus" layoutX="815.0" layoutY="128.0" prefHeight="42.0" prefWidth="149.0">
+            <Label fx:id="babyBottleStatus" layoutX="819.0" layoutY="129.0" prefHeight="42.0" prefWidth="175.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="670.0" layoutY="180.0" prefHeight="42.0" prefWidth="175.0" text="Camera:">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="cameraStatus" layoutX="819.0" layoutY="180.0" prefHeight="42.0" prefWidth="175.0">
                <font>
                   <Font size="17.0" />
                </font>

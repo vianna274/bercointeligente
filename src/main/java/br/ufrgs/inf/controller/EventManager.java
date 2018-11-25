@@ -4,7 +4,9 @@ import br.ufrgs.inf.data.events.Event;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class EventManager<T extends Event> {
 
@@ -36,5 +38,18 @@ public class EventManager<T extends Event> {
                           .filter(c -> c.getClass().equals(clazz))
                           .map(clazz::cast)
                           .collect(Collectors.toList());
+    }
+
+    public T replaceById(final T event) {
+        final Optional<Integer> idx = IntStream.of(this.events.size() - 1)
+            .filter(i -> this.events.get(i).getId().equals(event.getId()))
+            .boxed()
+            .findFirst();
+
+        idx.ifPresent(i ->
+            this.events.set(i, event)
+        );
+
+        return event;
     }
 }

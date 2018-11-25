@@ -39,6 +39,10 @@ public abstract class DefaultEvent implements Event {
 
     public String getId() { return this.id; }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public EventName getName() {
         return this.name;
     }
