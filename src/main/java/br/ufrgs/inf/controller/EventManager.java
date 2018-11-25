@@ -1,5 +1,6 @@
 package br.ufrgs.inf.controller;
 
+import br.ufrgs.inf.data.events.CameraEvent;
 import br.ufrgs.inf.data.events.Event;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.stream.IntStream;
 public class EventManager<T extends Event> {
 
     private List<T> events;
+
+    private CameraEvent currentCameraEvent;
 
     public EventManager() {
         this.events = new ArrayList<>();
@@ -51,5 +54,13 @@ public class EventManager<T extends Event> {
         );
 
         return event;
+    }
+
+    public CameraEvent getCurrentCameraEvent() {
+        return currentCameraEvent;
+    }
+
+    public void setCurrentCameraEvent(CameraEvent currentCameraEvent) {
+        this.currentCameraEvent = currentCameraEvent;
     }
 }

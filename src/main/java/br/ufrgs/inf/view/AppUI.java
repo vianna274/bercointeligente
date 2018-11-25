@@ -371,11 +371,11 @@ public class AppUI implements EventListener<DefaultEvent> {
     }
 
     private void configCameraStatus(final Label cameraStatus) {
-        this.configCameraStatus(cameraStatus, Optional.empty());
-    }
+        final CameraEvent curr = this.eventManager.getCurrentCameraEvent();
 
-    private void configCameraStatus(final Label cameraStatus, final Optional<Recording> recording) {
-        recording.ifPresent(r -> cameraStatus.setText(r.getLabel()));
+        final String text = curr != null ? curr.getEquipmentStatus().toString() : EquipmentStatus.OFF.toString();
+
+        this.cameraStatus.setText(text);
     }
 
     private void configSoundTable(final TableView<SomEvent> tableViewSound) {
@@ -685,8 +685,7 @@ public class AppUI implements EventListener<DefaultEvent> {
                 e.setEnd(now);
 
                 this.eventManager.replaceById(e);
-
-                //this.configCameraStatus(this.cameraStatus, Optional.ofNullable(e.getRecording()));
+                this.eventManager.setCurrentCameraEvent(e);
             }
         }
     }
