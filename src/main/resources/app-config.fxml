@@ -32,7 +32,6 @@
             <TableView fx:id="tableViewHeater" layoutX="11.0" layoutY="128.0" prefHeight="290.0" prefWidth="639.0">
               <columns>
                 <TableColumn fx:id="temperatureHeaterCol" prefWidth="75.0" text="Temperature" />
-                  <TableColumn fx:id="equipmentStatusHeaterCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startHeaterCol" prefWidth="75.0" text="Inicio" />
                   <TableColumn fx:id="endHeaterCol" prefWidth="75.0" text="Fim" />
               </columns>
@@ -43,7 +42,6 @@
             <TableView fx:id="tableViewMobile" layoutX="11.0" layoutY="128.0" prefHeight="290.0" prefWidth="639.0">
                <columns>
                   <TableColumn fx:id="velocityMobileCol" prefWidth="75.0" text="Velocidade" />
-                  <TableColumn fx:id="equipmentStatusMobileCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startMobileCol" prefWidth="75.0" text="Inicio" />
                   <TableColumn fx:id="endMobileCol" prefWidth="75.0" text="Fim" />
                </columns>
@@ -53,7 +51,6 @@
             </TableView>
             <TableView fx:id="tableViewLight" layoutX="11.0" layoutY="128.0" prefHeight="290.0" prefWidth="639.0">
                <columns>
-                  <TableColumn fx:id="equipmentStatusLightCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startLightCol" prefWidth="75.0" text="Inicio" />
                   <TableColumn fx:id="endLightCol" prefWidth="75.0" text="Fim" />
                </columns>
@@ -65,7 +62,6 @@
                <columns>
                   <TableColumn fx:id="volumeSoundCol" prefWidth="75.0" text="Volume" />
                   <TableColumn fx:id="musicSoundCol" prefWidth="75.0" text="Musica" />
-                  <TableColumn fx:id="equipmentStatusSoundCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startSoundCol" prefWidth="75.0" text="Inicio" />
                   <TableColumn fx:id="endSoundCol" prefWidth="75.0" text="Fim" />
                </columns>
@@ -76,7 +72,6 @@
             <TableView fx:id="tableViewCamera" layoutY="127.0" prefHeight="290.0" prefWidth="660.0">
                <columns>
                   <TableColumn fx:id="recordingCameraCol" prefWidth="75.0" text="Gravando" />
-                  <TableColumn fx:id="equipmentStatusCameraCol" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="startCameraCol" prefWidth="75.0" text="Inicio" />
                   <TableColumn fx:id="endCameraCol" prefWidth="75.0" text="Fim" />
                </columns>
