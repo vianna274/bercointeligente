@@ -5,12 +5,8 @@ import br.ufrgs.inf.data.domain.*;
 import br.ufrgs.inf.data.events.*;
 import br.ufrgs.inf.equipment.BabyBottle;
 import br.ufrgs.inf.event.Queue;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 
 public class AppController {
@@ -21,54 +17,14 @@ public class AppController {
     private BabyStatus babyStatus;
     private EquipmentStatus ligthStatus;
 
-    private List<Consumer<BabyBottle>> babyBottleListeners;
 
     public AppController(final Queue queue,
                          final EquipmentService equipmentService) {
         this.equipmentService = equipmentService;
         this.queue = queue;
-        this.babyStatus = BabyStatus.SLEEPING;
-        this.babyBottle = new BabyBottle();
-        this.babyBottleListeners = new ArrayList<>();
-        this.ligthStatus = EquipmentStatus.OFF;
-    }
-
-
-    public void setBabyStatus(BabyStatus babyStatus) {
-        this.babyStatus = babyStatus;
-    }
-
-    public BabyStatus getBabyStatus() {
-        return babyStatus;
-    }
-
-    public void addBabyBottleListener(final Consumer<BabyBottle> consumer) {
-        this.babyBottleListeners.add(consumer);
-    }
-
-    public void notifyBabyBottleListeners(final BabyBottle babyBottle) {
-        this.babyBottleListeners.forEach(s -> s.accept(this.babyBottle));
-    }
-
-    public void toggleBabyStatus() {
-        if(babyStatus.equals(BabyStatus.AWAKE)){
-            this.babyStatus = BabyStatus.SLEEPING;
-        }
-        else{
-            this.babyStatus =  BabyStatus.AWAKE;
-        }
-
-        this.babyBottle.toggleBabyBottleStatus();
-       // this.ligthStatus
-        this.notifyBabyBottleListeners(this.babyBottle);
-    }
-
-    public BabyBottle getBabyBottle() {
-        return babyBottle;
     }
 
     /* POST */
-
     public void wakeUpBaby() {
         CameraEvent event = new CameraEventBuilder()
                 .operation(Operation.ACTION)

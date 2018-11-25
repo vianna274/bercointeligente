@@ -1,7 +1,7 @@
 package br.ufrgs.inf;
 
-import br.ufrgs.inf.controller.EquipmentService;
 import br.ufrgs.inf.controller.AppController;
+import br.ufrgs.inf.controller.EquipmentService;
 import br.ufrgs.inf.controller.EventManager;
 import br.ufrgs.inf.equipment.*;
 import br.ufrgs.inf.event.Dispatcher;
@@ -16,8 +16,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class Main extends Application {

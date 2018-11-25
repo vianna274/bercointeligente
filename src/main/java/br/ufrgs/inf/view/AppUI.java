@@ -6,6 +6,7 @@ import br.ufrgs.inf.data.domain.*;
 import br.ufrgs.inf.data.events.*;
 import br.ufrgs.inf.event.EventListener;
 import br.ufrgs.inf.view.components.DateTimePickerCell;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -44,12 +45,12 @@ public class AppUI implements EventListener<DefaultEvent> {
     @FXML
     private Label eventTypeTitle;
 
-    @FXML
-    private Label babyStatus;
-    @FXML
-    private Label babyBottleStatus;
-    @FXML
-    private Label cameraStatus;
+    @FXML private Label babyStatus;
+    @FXML private Label babyBottleStatus;
+    @FXML private Label cameraStatus;
+    @FXML private Label soundStatus;
+    @FXML private Label mobileSpeedStatus;
+    @FXML private Label lightStatus;
 
     @FXML
     private TableView<CameraEvent> tableViewCamera;
@@ -212,9 +213,13 @@ public class AppUI implements EventListener<DefaultEvent> {
         Optional.ofNullable(this.tableViewLight).ifPresent(this::configLightTable);
         Optional.ofNullable(this.tableViewMobile).ifPresent(this::configMobileTable);
         Optional.ofNullable(this.tableViewSound).ifPresent(this::configSoundTable);
-        Optional.ofNullable(this.babyStatus).ifPresent(this::configBabyStatus);
         Optional.ofNullable(this.babyBottleStatus).ifPresent(this::configBabyBottleStatus);
         Optional.ofNullable(this.cameraStatus).ifPresent(this::configCameraStatus);
+
+        Optional.ofNullable(this.soundStatus).ifPresent(this::configSoundStatus);
+        Optional.ofNullable(this.mobileSpeedStatus).ifPresent(this::configMobileStatus);
+        Optional.ofNullable(this.lightStatus).ifPresent(this::configLightStatus);
+
         Optional.ofNullable(this.eventTypeTitle).ifPresent(this::configEventTypeTitle);
         Optional.ofNullable(this.cameraPane).ifPresent(this::configCameraPane);
         Optional.ofNullable(this.lightPane).ifPresent(this::configLightPane);
@@ -361,21 +366,69 @@ public class AppUI implements EventListener<DefaultEvent> {
         }
     }
 
-    private void configBabyStatus(final Label babyStatus) {
-        babyStatus.setText(this.appController.getBabyStatus().toString());
-    }
-
     private void configBabyBottleStatus(final Label babyBottleStatus) {
-        this.appController.addBabyBottleListener(b -> this.babyBottleStatus.setText(b.getBabyBottleStatus().toString()));
-        this.babyBottleStatus.setText(this.appController.getBabyBottle().getBabyBottleStatus().toString());
+        this.eventManager.addHeaterListener(b -> {
+            final AquecedorEvent c = (AquecedorEvent) b;
+            this.babyBottleStatus.setText(c.getEquipmentStatus().toString() + " - " + c.getTemperature().toString());
+        });
+
+        final AquecedorEvent event = this.eventManager.getCurrentHeaterEvent();
+
+        final String text = event != null ? event.getEquipmentStatus().toString() + " - " + event.getTemperature().toString() : EquipmentStatus.OFF + " - " + Temperature.AMBIENT.toString();
+
+        this.babyBottleStatus.setText(text);
     }
 
     private void configCameraStatus(final Label cameraStatus) {
-        final CameraEvent curr = this.eventManager.getCurrentCameraEvent();
+        this.eventManager.addCameraListener(camera -> {
+            final CameraEvent c = (CameraEvent) camera;
+            this.cameraStatus.setText(c.getRecording().toString());
+        });
 
-        final String text = curr != null ? curr.getEquipmentStatus().toString() : EquipmentStatus.OFF.toString();
+        final CameraEvent event = this.eventManager.getCurrentCameraEvent();
+
+        final String text = event != null ? event.getRecording().toString() : Recording.OFF.toString();
 
         this.cameraStatus.setText(text);
+    }
+
+    private void configSoundStatus(final Label soundStatus) {
+        this.eventManager.addSoundListener(sound -> {
+            final SomEvent s = (SomEvent) sound;
+            this.soundStatus.setText(s.getMusicVolume().toString());
+        });
+
+        final SomEvent event = this.eventManager.getCurrentSomEvent();
+
+        final String text = event != null ? event.getMusicVolume().toString() : MusicVolume.MEDIUM.toString();
+
+        this.soundStatus.setText(text);
+    }
+
+    private void configLightStatus(final Label lightStatus) {
+        this.eventManager.addLightListener(l -> {
+            final LuzEvent c = (LuzEvent) l;
+            this.cameraStatus.setText(c.getEquipmentStatus().toString());
+        });
+
+        final LuzEvent event = this.eventManager.getCurrentLuzEvent();
+
+        final String text = event != null ? event.getEquipmentStatus().toString() : EquipmentStatus.OFF.toString();
+
+        this.lightStatus.setText(text);
+    }
+
+    private void configMobileStatus(final Label mobileStatus) {
+        this.eventManager.addMobileListener(m -> {
+            final MobileEvent c = (MobileEvent) m;
+            this.cameraStatus.setText(c.getSpeed().toString());
+        });
+
+        final MobileEvent event = this.eventManager.getCurrentMobileEvent();
+
+        final String text = event != null ? event.getSpeed().toString() : MobileSpeed.MEDIUM.toString();
+
+        this.mobileSpeedStatus.setText(text);
     }
 
     private void configSoundTable(final TableView<SomEvent> tableViewSound) {
@@ -643,8 +696,7 @@ public class AppUI implements EventListener<DefaultEvent> {
     }
 
     public void onClickToggleBaby(final ActionEvent event) {
-        this.appController.toggleBabyStatus();
-        this.configBabyStatus(this.babyStatus);
+        this.configBabyBottleStatus(this.babyStatus);
     }
 
     private void showStage(final Stage stage, final ActionEvent event) {
@@ -670,23 +722,66 @@ public class AppUI implements EventListener<DefaultEvent> {
 
     @Override
     public void onEvent(final DefaultEvent event) {
-        if (event.getOperation() == Operation.STATUS_CHANGED) {
+        Platform.runLater(() -> {
+            if (event.getOperation() == Operation.STATUS_CHANGED) {
 
-            if (event instanceof CameraEvent) {
-                final CameraEvent e = (CameraEvent) event;
+                if (event instanceof CameraEvent) {
+                    final CameraEvent e = (CameraEvent) event;
 
-                final CameraEvent s = (CameraEvent) this.eventManager.listEventByClass(CameraEvent.class).get(0);
+                    final LocalDateTime now = LocalDateTime.now();
 
-                e.setId(s.getId());
+                    e.setStart(now);
+                    e.setEnd(now);
 
-                final LocalDateTime now = LocalDateTime.now();
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentCameraEvent(e);
 
-                e.setStart(now);
-                e.setEnd(now);
+                } else if (event instanceof LuzEvent) {
+                    final LuzEvent e = (LuzEvent) event;
 
-                this.eventManager.replaceById(e);
-                this.eventManager.setCurrentCameraEvent(e);
+                    final LocalDateTime now = LocalDateTime.now();
+
+                    e.setStart(now);
+                    e.setEnd(now);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentLuzEvent(e);
+
+
+                } else if (event instanceof MobileEvent) {
+                    final MobileEvent e = (MobileEvent) event;
+
+                    final LocalDateTime now = LocalDateTime.now();
+
+                    e.setStart(now);
+                    e.setEnd(now);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentMobileEvent(e);
+
+                } else if (event instanceof SomEvent) {
+                    final SomEvent e = (SomEvent) event;
+
+                    final LocalDateTime now = LocalDateTime.now();
+
+                    e.setStart(now);
+                    e.setEnd(now);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentSomEvent(e);
+
+                } else if (event instanceof AquecedorEvent) {
+                    final AquecedorEvent e = (AquecedorEvent) event;
+
+                    final LocalDateTime now = LocalDateTime.now();
+
+                    e.setStart(now);
+                    e.setEnd(now);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentHeaterEvent(e);
+                }
             }
-        }
+        });
     }
 }

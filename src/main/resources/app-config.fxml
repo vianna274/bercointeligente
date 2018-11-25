@@ -86,7 +86,7 @@
             </TableView>
             <Button fx:id="addEvent" layoutX="364.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickAdd" prefHeight="42.0" prefWidth="128.0" text="Adicionar" />
             <Button fx:id="deteleEvent" layoutX="503.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickDeleteEvent" prefHeight="42.0" prefWidth="128.0" text="Excluir" />
-            <Label fx:id="babyStatus" layoutX="819.0" layoutY="66.0" prefHeight="42.0" prefWidth="175.0">
+            <Label fx:id="babyStatus" layoutX="844.0" layoutY="66.0" prefHeight="42.0" prefWidth="318.0">
                <font>
                   <Font size="17.0" />
                </font>
@@ -96,12 +96,12 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="670.0" layoutY="129.0" prefHeight="42.0" prefWidth="120.0" text="Mamadeira:">
+            <Label layoutX="670.0" layoutY="125.0" prefHeight="42.0" prefWidth="120.0" text="Aquecedor:">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <Label fx:id="babyBottleStatus" layoutX="819.0" layoutY="129.0" prefHeight="42.0" prefWidth="175.0">
+            <Label fx:id="babyBottleStatus" layoutX="844.0" layoutY="125.0" prefHeight="42.0" prefWidth="318.0">
                <font>
                   <Font size="17.0" />
                </font>
@@ -111,7 +111,37 @@
                   <Font size="17.0" />
                </font>
             </Label>
-            <Label fx:id="cameraStatus" layoutX="819.0" layoutY="180.0" prefHeight="42.0" prefWidth="175.0">
+            <Label fx:id="cameraStatus" layoutX="845.0" layoutY="180.0" prefHeight="42.0" prefWidth="318.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="670.0" layoutY="231.0" prefHeight="42.0" prefWidth="175.0" text="Som:">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="soundStatus" layoutX="845.0" layoutY="231.0" prefHeight="42.0" prefWidth="318.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="670.0" layoutY="284.0" prefHeight="42.0" prefWidth="175.0" text="Mobile:">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="mobileSpeedStatus" layoutX="845.0" layoutY="284.0" prefHeight="42.0" prefWidth="318.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="670.0" layoutY="338.0" prefHeight="42.0" prefWidth="175.0" text="Luz:">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="lightStatus" layoutX="845.0" layoutY="338.0" prefHeight="42.0" prefWidth="318.0">
                <font>
                   <Font size="17.0" />
                </font>
