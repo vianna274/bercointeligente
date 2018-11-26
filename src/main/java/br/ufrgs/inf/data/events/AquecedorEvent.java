@@ -6,6 +6,7 @@ import br.ufrgs.inf.data.domain.Operation;
 import br.ufrgs.inf.data.domain.Temperature;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class AquecedorEvent extends DefaultEvent {
 
@@ -43,6 +44,26 @@ public class AquecedorEvent extends DefaultEvent {
 
     public EquipmentStatus getEquipmentStatus() {
         return equipmentStatus;
+    }
+
+    public static AquecedorEvent merge(AquecedorEvent newEvent, final AquecedorEvent oldEvent) {
+        if (newEvent == null) {
+            newEvent = defaultInstance();
+        }
+
+        final Optional<AquecedorEvent> opt  = Optional.ofNullable(oldEvent);
+
+        opt.map(AquecedorEvent::getTemperature).ifPresent(newEvent::setTemperature);
+        opt.map(AquecedorEvent::getEquipmentStatus).ifPresent(newEvent::setEquipmentStatus);
+        opt.map(AquecedorEvent::getEnd).ifPresent(newEvent::setEnd);
+        opt.map(AquecedorEvent::getStart).ifPresent(newEvent::setStart);
+        opt.map(AquecedorEvent::getOperation).ifPresent(newEvent::setOperation);
+
+        return newEvent;
+    }
+
+    public static AquecedorEvent merge(final AquecedorEvent oldEvent) {
+        return merge(defaultInstance(), oldEvent);
     }
 
     public void setEquipmentStatus(EquipmentStatus equipmentStatus) {

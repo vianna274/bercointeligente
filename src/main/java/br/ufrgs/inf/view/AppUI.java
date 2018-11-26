@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import tornadofx.control.DateTimePicker;
@@ -213,6 +214,7 @@ public class AppUI implements EventListener<DefaultEvent> {
         Optional.ofNullable(this.tableViewLight).ifPresent(this::configLightTable);
         Optional.ofNullable(this.tableViewMobile).ifPresent(this::configMobileTable);
         Optional.ofNullable(this.tableViewSound).ifPresent(this::configSoundTable);
+        Optional.ofNullable(this.babyStatus).ifPresent(this::configBabyStatus);
         Optional.ofNullable(this.babyBottleStatus).ifPresent(this::configBabyBottleStatus);
         Optional.ofNullable(this.cameraStatus).ifPresent(this::configCameraStatus);
 
@@ -246,16 +248,10 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.mobileVelocity.setOnAction(igr -> this.mobileEvent.setSpeed(this.mobileVelocity.getSelectionModel().getSelectedItem()));
 
         this.mobileStart.setValue(LocalDate.now());
-        this.mobileStart.setOnAction(igr -> this.mobileEvent.setStart(this.mobileStart.getDateTimeValue()));
-        this.mobileStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.mobileEvent.setStart(this.mobileStart.getDateTimeValue());
-        });
+        this.mobileStart.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.mobileEvent.setStart(this.mobileStart.getDateTimeValue()));
 
         this.mobileEnd.setValue(LocalDate.now());
-        this.mobileEnd.setOnAction(igr -> this.mobileEvent.setEnd(this.mobileEnd.getDateTimeValue()));
-        this.mobileEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.mobileEvent.setEnd(this.mobileEnd.getDateTimeValue());
-        });
+        this.mobileEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.mobileEvent.setStart(this.mobileEnd.getDateTimeValue()));
     }
 
     private void configSoundPane(final Pane soundPane) {
@@ -270,16 +266,10 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.soundVolume.setOnAction(igr -> this.soundEvent.setMusicVolume(this.soundVolume.getSelectionModel().getSelectedItem()));
 
         this.soundStart.setValue(LocalDate.now());
-        this.soundStart.setOnAction(igr -> this.soundEvent.setStart(this.soundStart.getDateTimeValue()));
-        this.soundStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.soundEvent.setStart(this.soundEnd.getDateTimeValue());
-        });
+        this.soundStart.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.soundEvent.setStart(this.soundStart.getDateTimeValue()));
 
         this.soundEnd.setValue(LocalDate.now());
-        this.soundEnd.setOnAction(igr -> this.soundEvent.setEnd(this.soundEnd.getDateTimeValue()));
-        this.soundEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.soundEvent.setEnd(this.soundEnd.getDateTimeValue());
-        });
+        this.soundEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.soundEvent.setStart(this.soundEnd.getDateTimeValue()));
     }
 
     private void configHeaterPane(final Pane heaterPane) {
@@ -290,32 +280,20 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.heaterTemperature.setOnAction(igr -> this.heaterEvent.setTemperature(this.heaterTemperature.getSelectionModel().getSelectedItem()));
 
         this.heaterStart.setValue(LocalDate.now());
-        this.heaterStart.setOnAction(igr -> this.heaterEvent.setStart(this.heaterStart.getDateTimeValue()));
-        this.heaterStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.heaterEvent.setStart(this.heaterStart.getDateTimeValue());
-        });
+        this.heaterStart.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.heaterEvent.setStart(this.heaterStart.getDateTimeValue()));
 
         this.heaterEnd.setValue(LocalDate.now());
-        this.heaterEnd.setOnAction(igr -> this.heaterEvent.setEnd(this.heaterEnd.getDateTimeValue()));
-        this.heaterEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.heaterEvent.setEnd(this.heaterEnd.getDateTimeValue());
-        });
+        this.heaterEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.heaterEvent.setStart(this.heaterEnd.getDateTimeValue()));
     }
 
     private void configLightPane(final Pane lightPane) {
         this.lightEvent = LuzEvent.defaultInstance();
 
         this.lightStart.setValue(LocalDate.now());
-        this.lightStart.setOnAction(igr -> this.lightEvent.setStart(this.lightStart.getDateTimeValue()));
-        this.lightStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.lightEvent.setStart(this.lightStart.getDateTimeValue());
-        });
+        this.lightStart.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.lightEvent.setStart(this.lightStart.getDateTimeValue()));
 
         this.lightEnd.setValue(LocalDate.now());
-        this.lightEnd.setOnAction(igr -> this.lightEvent.setEnd(this.lightEnd.getDateTimeValue()));
-        this.lightEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.lightEvent.setEnd(this.lightEnd.getDateTimeValue());
-        });
+        this.lightEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.lightEvent.setStart(this.lightEnd.getDateTimeValue()));
     }
 
     private void configCameraPane(final Pane cameraPane) {
@@ -326,17 +304,10 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.cameraRecording.setOnAction(igr -> this.cameraEvent.setRecording(this.cameraRecording.getSelectionModel().getSelectedItem()));
 
         this.cameraStart.setValue(LocalDate.now());
-        this.cameraStart.setOnAction(igr -> this.cameraEvent.setStart(this.cameraStart.getDateTimeValue()));
-        this.cameraStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.cameraEvent.setStart(this.cameraStart.getDateTimeValue());
-        });
+        this.cameraEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.cameraEvent.setStart(this.cameraStart.getDateTimeValue()));
 
         this.cameraEnd.setValue(LocalDate.now());
-        this.cameraEnd.setOnAction(igr -> this.cameraEvent.setEnd(this.cameraEnd.getDateTimeValue()));
-        this.cameraEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.cameraEvent.setEnd(this.cameraEnd.getDateTimeValue());
-        });
-
+        this.cameraEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.cameraEvent.setEnd(this.cameraEnd.getDateTimeValue()));
     }
 
     private void configEventTypeTitle(final Label eventTypeTitle) {
@@ -346,9 +317,26 @@ public class AppUI implements EventListener<DefaultEvent> {
         }
     }
 
+    private void configBabyStatus(final Label babyStatus) {
+        this.eventManager.addCameraListener(c -> {
+            final CameraEvent cc = CameraEvent.merge((CameraEvent) c);
+
+            final BabyStatus status = cc.getBabyStatus() == null ? CameraEvent.defaultInstance().getBabyStatus() : cc.getBabyStatus();
+
+            this.babyStatus.setText(status.toString());
+        });
+
+        final CameraEvent event = this.eventManager.getCurrentCameraEvent();
+
+        final String text = event != null ? event.getBabyStatus().toString() : BabyStatus.SLEEPING.toString();
+
+        this.babyStatus.setText(text);
+    }
+
     private void configBabyBottleStatus(final Label babyBottleStatus) {
         this.eventManager.addHeaterListener(b -> {
-            final AquecedorEvent c = (AquecedorEvent) b;
+            final AquecedorEvent c = AquecedorEvent.merge((AquecedorEvent) b);
+
             this.babyBottleStatus.setText(c.getEquipmentStatus().toString() + " - " + c.getTemperature().toString());
         });
 
@@ -361,20 +349,21 @@ public class AppUI implements EventListener<DefaultEvent> {
 
     private void configCameraStatus(final Label cameraStatus) {
         this.eventManager.addCameraListener(camera -> {
-            final CameraEvent c = (CameraEvent) camera;
+            final CameraEvent c = CameraEvent.merge((CameraEvent) camera);
+
             this.cameraStatus.setText(c.getRecording().toString());
         });
 
         final CameraEvent event = this.eventManager.getCurrentCameraEvent();
 
-        final String text = event != null ? event.getRecording().toString() : Recording.OFF.toString();
+        final String text = event != null && event.getRecording() != null ? event.getRecording().toString() : Recording.OFF.toString();
 
         this.cameraStatus.setText(text);
     }
 
     private void configSoundStatus(final Label soundStatus) {
         this.eventManager.addSoundListener(sound -> {
-            final SomEvent s = (SomEvent) sound;
+            final SomEvent s = SomEvent.merge((SomEvent) sound);
             this.soundStatus.setText(s.getEquipmentStatus().toString() + " - " + s.getMusicVolume().toString());
         });
 
@@ -387,7 +376,7 @@ public class AppUI implements EventListener<DefaultEvent> {
 
     private void configLightStatus(final Label lightStatus) {
         this.eventManager.addLightListener(l -> {
-            final LuzEvent c = (LuzEvent) l;
+            final LuzEvent c = LuzEvent.merge((LuzEvent) l);
             this.lightStatus.setText(c.getEquipmentStatus().toString());
         });
 
@@ -400,8 +389,8 @@ public class AppUI implements EventListener<DefaultEvent> {
 
     private void configMobileStatus(final Label mobileStatus) {
         this.eventManager.addMobileListener(m -> {
-            final MobileEvent c = (MobileEvent) m;
-            this.mobileSpeedStatus.setText(c.getEquipmentStatus().toString() + " - " + c.getSpeed().toString());
+            final MobileEvent e = MobileEvent.merge((MobileEvent) m);
+            this.mobileSpeedStatus.setText(e.getEquipmentStatus().toString() + " - " + e.getSpeed().toString());
         });
 
         final MobileEvent event = this.eventManager.getCurrentMobileEvent();
@@ -521,6 +510,8 @@ public class AppUI implements EventListener<DefaultEvent> {
 
         controller.setUserData(this.userData);
 
+        this.eventManager.clearListeners();
+
         loader.setController(controller);
 
         final Parent root = loader.load();
@@ -590,6 +581,7 @@ public class AppUI implements EventListener<DefaultEvent> {
         final Event enqueued = (Event) selected;
 
         this.eventManager.remove(enqueued);
+        this.eventManager.findbyId(enqueued.getId());
     }
 
     public void onClickSaveEvent(final ActionEvent event) throws Exception {
@@ -655,7 +647,8 @@ public class AppUI implements EventListener<DefaultEvent> {
     }
 
     public void onClickToggleBaby(final ActionEvent event) {
-        this.configBabyBottleStatus(this.babyStatus);
+        if (this.appController.isBabyAwake()) this.appController.babySleep();
+        else this.appController.wakeUpBaby();
     }
 
     private void showStage(final Stage stage, final ActionEvent event) {
@@ -685,57 +678,32 @@ public class AppUI implements EventListener<DefaultEvent> {
             if (event.getOperation() == Operation.STATUS_CHANGED) {
 
                 if (event instanceof CameraEvent) {
-                    final CameraEvent e = (CameraEvent) event;
-
-                    final LocalDateTime now = LocalDateTime.now();
-
-                    e.setStart(now);
-                    e.setEnd(now);
+                    final CameraEvent e = CameraEvent.merge(this.eventManager.getCurrentCameraEvent(), (CameraEvent) event);
 
                     this.eventManager.replaceById(e);
                     this.eventManager.setCurrentCameraEvent(e);
 
                 } else if (event instanceof LuzEvent) {
-                    final LuzEvent e = (LuzEvent) event;
-
-                    final LocalDateTime now = LocalDateTime.now();
-
-                    e.setStart(now);
-                    e.setEnd(now);
+                    final LuzEvent e = LuzEvent.merge(this.eventManager.getCurrentLuzEvent(), (LuzEvent) event);
 
                     this.eventManager.replaceById(e);
                     this.eventManager.setCurrentLuzEvent(e);
 
 
                 } else if (event instanceof MobileEvent) {
-                    final MobileEvent e = (MobileEvent) event;
-
-                    final LocalDateTime now = LocalDateTime.now();
-
-                    e.setStart(now);
-                    e.setEnd(now);
+                    final MobileEvent e = MobileEvent.merge(this.eventManager.getCurrentMobileEvent(), (MobileEvent) event);
 
                     this.eventManager.replaceById(e);
                     this.eventManager.setCurrentMobileEvent(e);
 
                 } else if (event instanceof SomEvent) {
-                    final SomEvent e = (SomEvent) event;
-
-                    final LocalDateTime now = LocalDateTime.now();
-
-                    e.setStart(now);
-                    e.setEnd(now);
+                    final SomEvent e = SomEvent.merge(this.eventManager.getCurrentSomEvent(), (SomEvent) event);
 
                     this.eventManager.replaceById(e);
                     this.eventManager.setCurrentSomEvent(e);
 
                 } else if (event instanceof AquecedorEvent) {
-                    final AquecedorEvent e = (AquecedorEvent) event;
-
-                    final LocalDateTime now = LocalDateTime.now();
-
-                    e.setStart(now);
-                    e.setEnd(now);
+                    final AquecedorEvent e = AquecedorEvent.merge(this.eventManager.getCurrentHeaterEvent(), (AquecedorEvent) event);
 
                     this.eventManager.replaceById(e);
                     this.eventManager.setCurrentHeaterEvent(e);

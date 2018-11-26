@@ -21,8 +21,8 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button layoutX="47.0" layoutY="432.0" mnemonicParsing="false" onAction="#onClickBackApp" prefHeight="57.0" prefWidth="251.0" text="Voltar" />
-            <Button layoutX="378.0" layoutY="432.0" mnemonicParsing="false" onAction="#onClickToggleBaby" prefHeight="57.0" prefWidth="251.0" text="Toggle Baby" />
+            <Button layoutX="3.0" layoutY="432.0" mnemonicParsing="false" onAction="#onClickBackApp" prefHeight="57.0" prefWidth="175.0" text="Voltar" />
+            <Button layoutX="243.0" layoutY="432.0" mnemonicParsing="false" onAction="#onClickToggleBaby" prefHeight="57.0" prefWidth="175.0" text="Dormir/Acordar Bebe" />
             <ComboBox fx:id="type" layoutX="60.0" layoutY="66.0" onAction="#onTypeChanged" prefHeight="42.0" prefWidth="203.0" />
             <Label layoutX="670.0" layoutY="66.0" prefHeight="42.0" prefWidth="120.0" text="Bebe:">
                <font>
@@ -141,6 +141,7 @@
                   <Font size="17.0" />
                </font>
             </Label>
+            <Button layoutX="485.0" layoutY="432.0" mnemonicParsing="false" onAction="#onClickToggleBaby" prefHeight="57.0" prefWidth="175.0" text="Fazer barulho" />
          </children>
          <VBox.margin>
             <Insets />

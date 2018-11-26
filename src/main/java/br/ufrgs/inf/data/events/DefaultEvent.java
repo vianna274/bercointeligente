@@ -70,4 +70,8 @@ public abstract class DefaultEvent implements Event {
     public Operation getOperation() {
         return operation;
     }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
 }

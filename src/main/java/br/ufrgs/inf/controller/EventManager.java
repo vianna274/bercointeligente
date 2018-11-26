@@ -82,13 +82,31 @@ public class EventManager<T extends Event> {
         this.events = events;
     }
 
+    public void clearListeners() {
+        this.mobileListeners = new ArrayList<>();
+        this.heaterListeners = new ArrayList<>();
+        this.lightListeners  = new ArrayList<>();
+        this.soundListeners  = new ArrayList<>();
+        this.cameraListeners = new ArrayList<>();
+    }
+
     public T add(final T event) {
         this.events.add(event);
         return event;
     }
 
     public boolean remove(final T event) {
-        return this.events.remove(event);
+        final Optional<Integer> idx = IntStream.of(this.events.size() - 1)
+            .filter(i -> this.events.get(i).getId().equals(event.getId()))
+            .boxed()
+            .findFirst();
+
+        return idx.map(i -> this.events.remove(i))
+            .orElse(false);
+    }
+
+    public Optional<T> findbyId(final String id) {
+        return this.events.stream().filter(e -> e.getId().equals(id)).findFirst();
     }
 
     public List<T> listEventByClass(final Class<T> clazz) {
@@ -99,7 +117,7 @@ public class EventManager<T extends Event> {
     }
 
     public T replaceById(final T event) {
-        final Optional<Integer> idx = IntStream.of(this.events.size() - 1)
+        final Optional<Integer> idx = IntStream.range(0, this.events.size())
             .filter(i -> this.events.get(i).getId().equals(event.getId()))
             .boxed()
             .findFirst();

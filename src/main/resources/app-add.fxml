@@ -149,7 +149,7 @@
       <Pane>
          <children>
             <Button layoutX="49.0" mnemonicParsing="false" onAction="#onClickConfig" prefHeight="57.0" prefWidth="251.0" text="Voltar" />
-            <Button defaultButton="true" layoutX="356.0" mnemonicParsing="false" onAction="#onClickSaveEvent" prefHeight="57.0" prefWidth="251.0" text="Salvar" />
+            <Button layoutX="356.0" mnemonicParsing="false" onAction="#onClickSaveEvent" prefHeight="57.0" prefWidth="251.0" text="Salvar" />
          </children>
       </Pane>
   </children>
