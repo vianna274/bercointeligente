@@ -34,22 +34,35 @@ public class LuzHandler implements EventListener<LuzEvent> {
 
     public Integer handlePauseEvent(LuzEvent event) {
         System.out.println("[Luz Handler] : Pause");
-        this.handleEndEvent(event);
+        this.luz.turnOff();
+
+        sendUiQueue(new LuzEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(luz.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
     public Integer handleResumeEvent(LuzEvent event) {
         System.out.println("[Luz Handler] : Resume");
-        this.handleStartEvent(event);
+        this.luz.turnOn();
+
+        sendUiQueue(new LuzEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(luz.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
     public Integer handleEndEvent(LuzEvent event) {
-        this.luz.toggle();
-        this.sendUiQueue(new LuzEventBuilder()
+        this.luz.turnOff();
+
+        sendUiQueue(new LuzEventBuilder()
                 .operation(Operation.STATUS_CHANGED)
-                .id(event.getId())
                 .equipmentStatus(luz.getEquipmentStatus())
+                .id(event.getId())
                 .build());
         return 0;
     }

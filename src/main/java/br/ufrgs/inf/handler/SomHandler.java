@@ -36,19 +36,32 @@ public class SomHandler implements EventListener<SomEvent> {
 
     public Integer handlePauseEvent(SomEvent event) {
         System.out.println("[Som Handler] : Pause");
-        this.handleEndEvent(event);
+        this.som.turnOff();
+
+        sendUiQueue(new SomEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(som.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
     public Integer handleResumeEvent(SomEvent event) {
         System.out.println("[Som Handler] : Resume");
-        this.handleStartEvent(event);
+        this.som.turnOn();
+
+        sendUiQueue(new SomEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(som.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
     public Integer handleEndEvent(SomEvent event) {
-        this.som.toggle();
-        this.sendUiQueue(new SomEventBuilder()
+        this.som.turnOff();
+
+        sendUiQueue(new SomEventBuilder()
                 .operation(Operation.STATUS_CHANGED)
                 .equipmentStatus(som.getEquipmentStatus())
                 .id(event.getId())

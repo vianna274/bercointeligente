@@ -127,27 +127,32 @@ public class AppController {
 
     public void deleteLuzEvent(String id) {
         LuzEvent event = new LuzEvent(Operation.DELETE, id);
+        this.queue.enqueue(event);
     }
 
     public void deleteAquecedorEvent(String id) {
         AquecedorEvent event = new AquecedorEvent(Operation.DELETE, id);
+        this.queue.enqueue(event);
     }
 
     public void deleteMobileEvent(String id) {
         MobileEvent event = new MobileEvent(Operation.DELETE, id);
+        this.queue.enqueue(event);
     }
 
     public void deleteSomEvent(String id) {
         SomEvent event = new SomEvent(Operation.DELETE, id);
+        this.queue.enqueue(event);
     }
 
     public void deleteCameraEvent(String id) {
         CameraEvent event = new CameraEvent(Operation.DELETE, id);
+        this.queue.enqueue(event);
     }
 
     /* PUT */
 
-    public String createAquecedorEvent(String id, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
+    public String updateAquecedorEvent(String id, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
         AquecedorEvent event = new AquecedorEventBuilder()
                 .operation(Operation.PUT)
                 .start(begin)
@@ -161,7 +166,7 @@ public class AppController {
         return event.getId();
     }
 
-    public String createAquecedorEvent(String id, LocalDateTime begin, LocalDateTime end, Temperature temperature, EquipmentStatus status) {
+    public String updateAquecedorEvent(String id, LocalDateTime begin, LocalDateTime end, Temperature temperature, EquipmentStatus status) {
         AquecedorEvent event = new AquecedorEventBuilder()
                 .operation(Operation.PUT)
                 .start(begin)
@@ -176,7 +181,7 @@ public class AppController {
         return event.getId();
     }
 
-    public String createCameraEvent(String id, LocalDateTime begin, LocalDateTime end, Recording recording, EquipmentStatus status) {
+    public String updateCameraEvent(String id, LocalDateTime begin, LocalDateTime end, Recording recording, EquipmentStatus status) {
         CameraEvent event = new CameraEventBuilder()
                 .operation(Operation.PUT)
                 .start(begin)
@@ -191,7 +196,7 @@ public class AppController {
         return event.getId();
     }
 
-    public String createCameraEvent(String id, LocalDateTime begin, LocalDateTime end, BabyStatus babyStatus) {
+    public String updateCameraEvent(String id, LocalDateTime begin, LocalDateTime end, BabyStatus babyStatus) {
         CameraEvent event = new CameraEventBuilder()
                 .operation(Operation.PUT)
                 .start(begin)
@@ -205,7 +210,7 @@ public class AppController {
         return event.getId();
     }
 
-    public String createSomEvent(String id, LocalDateTime begin, LocalDateTime end, MusicVolume musicVolume, Song song, EquipmentStatus status) {
+    public String updateSomEvent(String id, LocalDateTime begin, LocalDateTime end, MusicVolume musicVolume, Song song, EquipmentStatus status) {
         SomEvent event = new SomEventBuilder()
                 .operation(Operation.PUT)
                 .start(begin)
@@ -221,7 +226,7 @@ public class AppController {
         return event.getId();
     }
 
-    public String createMobileEvent(String id, LocalDateTime begin, LocalDateTime end, MobileSpeed mobileSpeed, EquipmentStatus status) {
+    public String updateMobileEvent(String id, LocalDateTime begin, LocalDateTime end, MobileSpeed mobileSpeed, EquipmentStatus status) {
         MobileEvent event = new MobileEventBuilder()
                 .operation(Operation.PUT)
                 .start(begin)
@@ -236,7 +241,7 @@ public class AppController {
         return event.getId();
     }
 
-    public String createLuzEvent(String id, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
+    public String updateLuzEvent(String id, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
         LuzEvent event = new LuzEventBuilder()
                 .operation(Operation.PUT)
                 .start(begin)
@@ -254,44 +259,54 @@ public class AppController {
 
     public void pauseLuzEvent(String id) {
         LuzEvent event = new LuzEvent(Operation.PAUSE, id);
+        this.queue.enqueue(event);
     }
 
     public void pauseAquecedorEvent(String id) {
         AquecedorEvent event = new AquecedorEvent(Operation.PAUSE, id);
+        this.queue.enqueue(event);
     }
 
     public void pauseMobileEvent(String id) {
         MobileEvent event = new MobileEvent(Operation.PAUSE, id);
+        this.queue.enqueue(event);
     }
 
     public void pauseSomEvent(String id) {
         SomEvent event = new SomEvent(Operation.PAUSE, id);
+        this.queue.enqueue(event);
     }
 
     public void pauseCameraEvent(String id) {
         CameraEvent event = new CameraEvent(Operation.PAUSE, id);
+        this.queue.enqueue(event);
     }
 
     /* RESUME */
 
     public void resumeLuzEvent(String id) {
         LuzEvent event = new LuzEvent(Operation.RESUME, id);
+        this.queue.enqueue(event);
     }
 
     public void resumeAquecedorEvent(String id) {
         AquecedorEvent event = new AquecedorEvent(Operation.RESUME, id);
+        this.queue.enqueue(event);
     }
 
     public void resumeMobileEvent(String id) {
         MobileEvent event = new MobileEvent(Operation.RESUME, id);
+        this.queue.enqueue(event);
     }
 
     public void resumeSomEvent(String id) {
         SomEvent event = new SomEvent(Operation.RESUME, id);
+        this.queue.enqueue(event);
     }
 
     public void resumeCameraEvent(String id) {
         CameraEvent event = new CameraEvent(Operation.RESUME, id);
+        this.queue.enqueue(event);
     }
 
     public EquipmentStatus getLigthStatus() {

@@ -34,13 +34,25 @@ public class CameraHandler implements EventListener<CameraEvent> {
 
     public Integer handlePauseEvent(CameraEvent event) {
         System.out.println("[Camera Handler] : Pause");
-        this.handleEndEvent(event);
+        this.camera.turnOff();
+
+        sendUiQueue(new CameraEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(camera.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
     public Integer handleResumeEvent(CameraEvent event) {
         System.out.println("[Camera Handler] : Resume");
-        this.handleStartEvent(event);
+        this.camera.turnOn();
+
+        sendUiQueue(new CameraEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(camera.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 

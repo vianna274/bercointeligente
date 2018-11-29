@@ -38,22 +38,35 @@ public class MobileHandler implements EventListener<MobileEvent> {
 
     public Integer handlePauseEvent(MobileEvent event) {
         System.out.println("[Mobile Handler] : Pause");
-        this.handleEndEvent(event);
+        this.mobile.turnOff();
+
+        sendUiQueue(new MobileEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(mobile.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
     public Integer handleResumeEvent(MobileEvent event) {
         System.out.println("[Mobile Handler] : Resume");
-        this.handleStartEvent(event);
+        this.mobile.turnOn();
+
+        sendUiQueue(new MobileEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(mobile.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
     public Integer handleEndEvent(MobileEvent event) {
-        this.mobile.toggle();
-        this.sendUiQueue(new MobileEventBuilder()
+        this.mobile.turnOff();
+
+        sendUiQueue(new MobileEventBuilder()
                 .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(mobile.getEquipmentStatus())
                 .id(event.getId())
-                .equipmentStatus(this.mobile.getEquipmentStatus())
                 .build());
         return 0;
     }

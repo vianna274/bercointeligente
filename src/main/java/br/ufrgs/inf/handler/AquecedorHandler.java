@@ -39,18 +39,30 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
 
     public Integer handlePauseEvent(AquecedorEvent event) {
         System.out.println("[Aquecedor Handler] : Pause");
-        this.handleEndEvent(event);
+        this.aquecedor.turnOff();
+
+        sendUiQueue(new AquecedorEventBuilder()
+            .operation(Operation.STATUS_CHANGED)
+            .equipmentStatus(aquecedor.getEquipmentStatus())
+            .id(event.getId())
+            .build());
         return 0;
     }
 
     public Integer handleResumeEvent(AquecedorEvent event) {
         System.out.println("[Aquecedor Handler] : Resume");
-        this.handleStartEvent(event);
+        this.aquecedor.turnOn();
+
+        sendUiQueue(new AquecedorEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(aquecedor.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
     public Integer handleEndEvent(AquecedorEvent event) {
-        this.aquecedor.toggle();
+        this.aquecedor.turnOff();
         this.aquecedor.changeTemperature(Temperature.COLD);
 
         sendUiQueue(new AquecedorEventBuilder()
