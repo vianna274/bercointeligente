@@ -19,8 +19,7 @@ public class EquipmentService {
         this.som = som;
     }
 
-    public String getBabyStatus() {
-        BabyStatus status = camera.getBabyStatus();
-        return status == BabyStatus.AWAKE ? "AWAKE" : "SLEEPING";
+    public BabyStatus getBabyStatus() {
+        return camera.getBabyStatus();
     }
 }

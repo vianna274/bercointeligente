@@ -6,6 +6,7 @@ import br.ufrgs.inf.data.domain.MobileSpeed;
 import br.ufrgs.inf.data.domain.Operation;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class MobileEvent extends DefaultEvent {
 
@@ -26,6 +27,26 @@ public class MobileEvent extends DefaultEvent {
         super(operation, name, begin, end, id);
         this.equipmentStatus = equipmentStatus;
         this.speed = speed;
+    }
+
+    public static MobileEvent merge(MobileEvent newEvent, final MobileEvent oldEvent) {
+        if (newEvent == null) {
+            newEvent = defaultInstance();
+        }
+
+        final Optional<MobileEvent> opt  = Optional.ofNullable(oldEvent);
+
+        opt.map(MobileEvent::getSpeed).ifPresent(newEvent::setSpeed);
+        opt.map(MobileEvent::getEquipmentStatus).ifPresent(newEvent::setEquipmentStatus);
+        opt.map(MobileEvent::getEnd).ifPresent(newEvent::setEnd);
+        opt.map(MobileEvent::getStart).ifPresent(newEvent::setStart);
+        opt.map(MobileEvent::getOperation).ifPresent(newEvent::setOperation);
+
+        return newEvent;
+    }
+
+    public static MobileEvent merge(final MobileEvent oldEvent) {
+        return merge(defaultInstance(), oldEvent);
     }
 
     public static MobileEvent defaultInstance() {

@@ -13,15 +13,15 @@ public class AppController {
 
     private final Queue queue;
     private final EquipmentService equipmentService;
-    private BabyBottle babyBottle;
-    private BabyStatus babyStatus;
-    private EquipmentStatus ligthStatus;
-
 
     public AppController(final Queue queue,
                          final EquipmentService equipmentService) {
         this.equipmentService = equipmentService;
         this.queue = queue;
+    }
+
+    public boolean isBabyAwake() {
+        return this.equipmentService.getBabyStatus() != BabyStatus.SLEEPING;
     }
 
     /* POST */
@@ -307,13 +307,5 @@ public class AppController {
     public void resumeCameraEvent(String id) {
         CameraEvent event = new CameraEvent(Operation.RESUME, id);
         this.queue.enqueue(event);
-    }
-
-    public EquipmentStatus getLigthStatus() {
-        return ligthStatus;
-    }
-
-    public void setLigthStatus(EquipmentStatus ligthStatus) {
-        this.ligthStatus = ligthStatus;
     }
 }

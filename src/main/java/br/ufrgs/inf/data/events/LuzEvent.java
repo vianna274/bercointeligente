@@ -1,11 +1,11 @@
 package br.ufrgs.inf.data.events;
 
-import br.ufrgs.inf.data.builders.LuzEventBuilder;
 import br.ufrgs.inf.data.domain.EquipmentStatus;
 import br.ufrgs.inf.data.domain.EventName;
 import br.ufrgs.inf.data.domain.Operation;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class LuzEvent extends DefaultEvent {
 
@@ -24,6 +24,24 @@ public class LuzEvent extends DefaultEvent {
         this.equipmentStatus = equipmentStatus;
     }
 
+    public static LuzEvent merge(LuzEvent newEvent, final LuzEvent oldEvent) {
+        if (newEvent == null) {
+            newEvent = defaultInstance();
+        }
+
+        final Optional<LuzEvent> opt  = Optional.ofNullable(oldEvent);
+
+        opt.map(LuzEvent::getEquipmentStatus).ifPresent(newEvent::setEquipmentStatus);
+        opt.map(LuzEvent::getEnd).ifPresent(newEvent::setEnd);
+        opt.map(LuzEvent::getStart).ifPresent(newEvent::setStart);
+        opt.map(LuzEvent::getOperation).ifPresent(newEvent::setOperation);
+
+        return newEvent;
+    }
+
+    public static LuzEvent merge(final LuzEvent oldEvent) {
+        return merge(defaultInstance(), oldEvent);
+    }
 
     public static LuzEvent defaultInstance() {
         final LocalDateTime now = LocalDateTime.now();
