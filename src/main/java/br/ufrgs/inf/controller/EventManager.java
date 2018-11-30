@@ -101,8 +101,10 @@ public class EventManager<T extends Event> {
             .boxed()
             .findFirst();
 
-        return idx.map(i -> this.events.remove(i))
+        boolean res = idx.map(i -> this.events.remove(this.events.get(i)))
             .orElse(false);
+
+        return res;
     }
 
     public Optional<T> findbyId(final String id) {

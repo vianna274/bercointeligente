@@ -31,8 +31,8 @@ public class CameraEvent extends DefaultEvent {
 
     public static CameraEvent defaultInstance() {
         final LocalDateTime now = LocalDateTime.now();
-        return new CameraEvent(Operation.POST, null, now, now, EquipmentStatus.values()[0],
-                Recording.values()[0], BabyStatus.values()[2]);
+        return new CameraEvent(Operation.POST, null, now, now, EquipmentStatus.ON,
+                Recording.ON, BabyStatus.SLEEPING);
     }
 
     public static CameraEvent merge(CameraEvent newEvent, final CameraEvent oldEvent) {

@@ -46,7 +46,7 @@ public class LuzEvent extends DefaultEvent {
     public static LuzEvent defaultInstance() {
         final LocalDateTime now = LocalDateTime.now();
 
-        return new LuzEvent(Operation.POST, null, now, now, EquipmentStatus.values()[0]);
+        return new LuzEvent(Operation.POST, null, now, now, EquipmentStatus.OFF);
     }
 
     public void toggleLigthStatus(){

@@ -4,9 +4,9 @@ import java.util.stream.Stream;
 
 public enum EquipmentStatus {
 
-    ON("Ligado"),
+    OFF("Desligado"),
 
-    OFF("Desligado");
+    ON("Ligado");
 
     private final String label;
 

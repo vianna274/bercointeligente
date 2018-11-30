@@ -2,9 +2,9 @@ package br.ufrgs.inf.data.domain;
 
 public enum MobileSpeed {
 
-    SLOW("Lento"),
-
     MEDIUM("Moderado"),
+
+    SLOW("Lento"),
 
     FAST("Rápido");
 

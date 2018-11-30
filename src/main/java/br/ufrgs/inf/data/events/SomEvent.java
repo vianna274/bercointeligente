@@ -31,7 +31,7 @@ public class SomEvent extends DefaultEvent {
 
     public static SomEvent defaultInstance() {
         final LocalDateTime now = LocalDateTime.now();
-        return new SomEvent(Operation.POST, null, now, now, MusicVolume.values()[0], Song.values()[0], EquipmentStatus.values()[0]);
+        return new SomEvent(Operation.POST, null, now, now, MusicVolume.MEDIUM, Song.FIRST, EquipmentStatus.OFF);
     }
 
     public static SomEvent merge(SomEvent newEvent, final SomEvent oldEvent) {

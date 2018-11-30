@@ -5,6 +5,7 @@ import br.ufrgs.inf.controller.EventManager;
 import br.ufrgs.inf.data.domain.*;
 import br.ufrgs.inf.data.events.*;
 import br.ufrgs.inf.event.EventListener;
+import br.ufrgs.inf.view.components.DateTimePicker;
 import br.ufrgs.inf.view.components.DateTimePickerCell;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -17,10 +18,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import tornadofx.control.DateTimePicker;
 
 import java.net.URL;
 import java.nio.file.Paths;
@@ -248,10 +247,10 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.mobileVelocity.setOnAction(igr -> this.mobileEvent.setSpeed(this.mobileVelocity.getSelectionModel().getSelectedItem()));
 
         this.mobileStart.setValue(LocalDate.now());
-        this.mobileStart.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.mobileEvent.setStart(this.mobileStart.getDateTimeValue()));
+        this.mobileStart.setOnAction(event -> this.mobileEvent.setStart(this.mobileStart.getDateTimeValue()));
 
         this.mobileEnd.setValue(LocalDate.now());
-        this.mobileEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.mobileEvent.setStart(this.mobileEnd.getDateTimeValue()));
+        this.mobileEnd.setOnAction(event -> this.mobileEvent.setStart(this.mobileEnd.getDateTimeValue()));
     }
 
     private void configSoundPane(final Pane soundPane) {
@@ -266,10 +265,10 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.soundVolume.setOnAction(igr -> this.soundEvent.setMusicVolume(this.soundVolume.getSelectionModel().getSelectedItem()));
 
         this.soundStart.setValue(LocalDate.now());
-        this.soundStart.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.soundEvent.setStart(this.soundStart.getDateTimeValue()));
+        this.soundStart.setOnAction(event -> this.soundEvent.setStart(this.soundStart.getDateTimeValue()));
 
         this.soundEnd.setValue(LocalDate.now());
-        this.soundEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.soundEvent.setStart(this.soundEnd.getDateTimeValue()));
+        this.soundEnd.setOnAction(event -> this.soundEvent.setStart(this.soundEnd.getDateTimeValue()));
     }
 
     private void configHeaterPane(final Pane heaterPane) {
@@ -280,20 +279,20 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.heaterTemperature.setOnAction(igr -> this.heaterEvent.setTemperature(this.heaterTemperature.getSelectionModel().getSelectedItem()));
 
         this.heaterStart.setValue(LocalDate.now());
-        this.heaterStart.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.heaterEvent.setStart(this.heaterStart.getDateTimeValue()));
+        this.heaterStart.setOnAction(event -> this.heaterEvent.setStart(this.heaterStart.getDateTimeValue()));
 
         this.heaterEnd.setValue(LocalDate.now());
-        this.heaterEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.heaterEvent.setStart(this.heaterEnd.getDateTimeValue()));
+        this.heaterEnd.setOnAction(event -> this.heaterEvent.setStart(this.heaterEnd.getDateTimeValue()));
     }
 
     private void configLightPane(final Pane lightPane) {
         this.lightEvent = LuzEvent.defaultInstance();
 
         this.lightStart.setValue(LocalDate.now());
-        this.lightStart.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.lightEvent.setStart(this.lightStart.getDateTimeValue()));
+        this.lightStart.setOnAction(event -> this.lightEvent.setStart(this.lightStart.getDateTimeValue()));
 
         this.lightEnd.setValue(LocalDate.now());
-        this.lightEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.lightEvent.setStart(this.lightEnd.getDateTimeValue()));
+        this.lightEnd.setOnAction(event -> this.lightEvent.setStart(this.lightEnd.getDateTimeValue()));
     }
 
     private void configCameraPane(final Pane cameraPane) {
@@ -304,10 +303,10 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.cameraRecording.setOnAction(igr -> this.cameraEvent.setRecording(this.cameraRecording.getSelectionModel().getSelectedItem()));
 
         this.cameraStart.setValue(LocalDate.now());
-        this.cameraEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.cameraEvent.setStart(this.cameraStart.getDateTimeValue()));
+        this.cameraStart.setOnAction(event -> this.cameraEvent.setStart(this.cameraStart.getDateTimeValue()));
 
         this.cameraEnd.setValue(LocalDate.now());
-        this.cameraEnd.addEventFilter(KeyEvent.KEY_PRESSED, event -> this.cameraEvent.setEnd(this.cameraEnd.getDateTimeValue()));
+        this.cameraEnd.setOnAction(event -> this.cameraEvent.setEnd(this.cameraEnd.getDateTimeValue()));
     }
 
     private void configEventTypeTitle(final Label eventTypeTitle) {
@@ -403,17 +402,25 @@ public class AppUI implements EventListener<DefaultEvent> {
     private void configSoundTable(final TableView<SomEvent> tableViewSound) {
         this.startSoundCol.setCellFactory(DateTimePickerCell.instance());
         this.startSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startSoundCol.setOnEditCommit(t -> this.editEvent(t.getRowValue()));
 
         this.endSoundCol.setCellFactory(DateTimePickerCell.instance());
         this.endSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
+        this.endSoundCol.setOnEditCommit(t -> this.editEvent(t.getRowValue()));
 
         this.volumeSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getMusicVolume()));
         this.volumeSoundCol.setCellFactory(ComboBoxTableCell.forTableColumn(MusicVolume.values()));
-        this.volumeSoundCol.setOnEditCommit(t -> t.getRowValue().setMusicVolume(t.getNewValue()));
+        this.volumeSoundCol.setOnEditCommit(t -> {
+            t.getRowValue().setMusicVolume(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.musicSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getCurrentSong()));
         this.musicSoundCol.setCellFactory(ComboBoxTableCell.forTableColumn(Song.values()));
-        this.musicSoundCol.setOnEditCommit(t -> t.getRowValue().setCurrentSong(t.getNewValue()));
+        this.musicSoundCol.setOnEditCommit(t -> {
+            t.getRowValue().setCurrentSong(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewSound.setEditable(true);
         tableViewSound.setItems(FXCollections.observableList(this.eventManager.listEventByClass(SomEvent.class)));
@@ -422,13 +429,24 @@ public class AppUI implements EventListener<DefaultEvent> {
     private void configMobileTable(final TableView<MobileEvent> tableViewMobile) {
         this.startMobileCol.setCellFactory(DateTimePickerCell.instance());
         this.startMobileCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startMobileCol.setOnEditCommit(t -> {
+            t.getRowValue().setStart(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.endMobileCol.setCellFactory(DateTimePickerCell.instance());
         this.endMobileCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
+        this.endMobileCol.setOnEditCommit(t -> {
+            t.getRowValue().setEnd(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.velocityMobileCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getSpeed()));
         this.velocityMobileCol.setCellFactory(ComboBoxTableCell.forTableColumn(MobileSpeed.values()));
-        this.velocityMobileCol.setOnEditCommit(t -> t.getRowValue().setSpeed(t.getNewValue()));
+        this.velocityMobileCol.setOnEditCommit(t -> {
+            t.getRowValue().setSpeed(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewMobile.setEditable(true);
         tableViewMobile.setItems(FXCollections.observableList(this.eventManager.listEventByClass(MobileEvent.class)));
@@ -437,13 +455,24 @@ public class AppUI implements EventListener<DefaultEvent> {
     private void configCameraTable(final TableView<CameraEvent> tableViewCamera) {
         this.startCameraCol.setCellFactory(DateTimePickerCell.instance());
         this.startCameraCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startCameraCol.setOnEditCommit(t -> {
+            t.getRowValue().setStart(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.endCameraCol.setCellFactory(DateTimePickerCell.instance());
         this.endCameraCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
+        this.endCameraCol.setOnEditCommit(t -> {
+            t.getRowValue().setEnd(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.recordingCameraCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getRecording()));
         this.recordingCameraCol.setCellFactory(ComboBoxTableCell.forTableColumn(Recording.values()));
-        this.recordingCameraCol.setOnEditCommit(t -> t.getRowValue().setRecording(t.getNewValue()));
+        this.recordingCameraCol.setOnEditCommit(t -> {
+            t.getRowValue().setRecording(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewCamera.setEditable(true);
         tableViewCamera.setItems(FXCollections.observableList(this.eventManager.listEventByClass(CameraEvent.class)));
@@ -453,13 +482,24 @@ public class AppUI implements EventListener<DefaultEvent> {
     private void configHeaterTable(final TableView<AquecedorEvent> tableViewHeater) {
         this.startHeaterCol.setCellFactory(DateTimePickerCell.instance());
         this.startHeaterCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startHeaterCol.setOnEditCommit(t -> {
+            t.getRowValue().setStart(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.endHeaterCol.setCellFactory(DateTimePickerCell.instance());
         this.endHeaterCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
+        this.endHeaterCol.setOnEditCommit(t -> {
+            t.getRowValue().setEnd(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.temperatureHeaterCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getTemperature()));
         this.temperatureHeaterCol.setCellFactory(ComboBoxTableCell.forTableColumn(Temperature.values()));
-        this.temperatureHeaterCol.setOnEditCommit(t -> t.getRowValue().setTemperature(t.getNewValue()));
+        this.temperatureHeaterCol.setOnEditCommit(t -> {
+            t.getRowValue().setTemperature(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewHeater.setEditable(true);
         tableViewHeater.setItems(FXCollections.observableList(this.eventManager.listEventByClass(AquecedorEvent.class)));
@@ -468,9 +508,17 @@ public class AppUI implements EventListener<DefaultEvent> {
     private void configLightTable(final TableView<LuzEvent> tableViewLight) {
         this.startLightCol.setCellFactory(DateTimePickerCell.instance());
         this.startLightCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startLightCol.setOnEditCommit(t -> {
+            t.getRowValue().setStart(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.endLightCol.setCellFactory(DateTimePickerCell.instance());
         this.endLightCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
+        this.endLightCol.setOnEditCommit(t -> {
+            t.getRowValue().setEnd(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewLight.setEditable(true);
         tableViewLight.setItems(FXCollections.observableList(this.eventManager.listEventByClass(LuzEvent.class)));
@@ -538,6 +586,10 @@ public class AppUI implements EventListener<DefaultEvent> {
                 .forEach(t -> t.setVisible(false));
     }
 
+    private void editEvent(final Event event) {
+        this.appController.updateEvent((DefaultEvent) event);
+    }
+
     public void onClickExit() {
         System.exit(0);
     }
@@ -580,8 +632,8 @@ public class AppUI implements EventListener<DefaultEvent> {
 
         final Event enqueued = (Event) selected;
 
+        this.appController.deleteEvent((DefaultEvent) enqueued);
         this.eventManager.remove(enqueued);
-        this.eventManager.findbyId(enqueued.getId());
     }
 
     public void onClickSaveEvent(final ActionEvent event) throws Exception {

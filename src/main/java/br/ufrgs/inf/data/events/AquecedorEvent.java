@@ -31,7 +31,7 @@ public class AquecedorEvent extends DefaultEvent {
 
     public static AquecedorEvent defaultInstance() {
         final LocalDateTime now = LocalDateTime.now();
-        return new AquecedorEvent(Operation.POST, null, now, now, Temperature.values()[0], EquipmentStatus.values()[0]);
+        return new AquecedorEvent(Operation.POST, null, now, now, Temperature.AMBIENT, EquipmentStatus.OFF);
     }
 
     public Temperature getTemperature() {

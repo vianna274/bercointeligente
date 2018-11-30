@@ -2,9 +2,9 @@ package br.ufrgs.inf.data.domain;
 
 public enum MusicVolume {
 
-    HIGH("Alto"),
-
     MEDIUM("Medio"),
+
+    HIGH("Alto"),
 
     LOW("Baixo");
 

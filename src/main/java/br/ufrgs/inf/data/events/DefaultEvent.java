@@ -4,6 +4,7 @@ import br.ufrgs.inf.data.domain.EventName;
 import br.ufrgs.inf.data.domain.Operation;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public abstract class DefaultEvent implements Event {
@@ -73,5 +74,20 @@ public abstract class DefaultEvent implements Event {
 
     public void setOperation(Operation operation) {
         this.operation = operation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DefaultEvent that = (DefaultEvent) o;
+
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

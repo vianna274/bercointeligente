@@ -150,6 +150,14 @@ public class AppController {
         this.queue.enqueue(event);
     }
 
+    public void deleteEvent(DefaultEvent event) {
+        if (event == null || "".equals(event.getId())) return;
+
+        event.setOperation(Operation.DELETE);
+
+        this.queue.enqueue(event);
+    }
+
     /* PUT */
 
     public String updateAquecedorEvent(String id, LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
@@ -204,6 +212,14 @@ public class AppController {
                 .babyStatus(babyStatus)
                 .id(id)
                 .build();
+
+        this.queue.enqueue(event);
+
+        return event.getId();
+    }
+
+    public String updateEvent(DefaultEvent event) {
+        event.setOperation(Operation.PUT);
 
         this.queue.enqueue(event);
 

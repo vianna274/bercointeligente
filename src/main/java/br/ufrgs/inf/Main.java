@@ -3,6 +3,10 @@ package br.ufrgs.inf;
 import br.ufrgs.inf.controller.AppController;
 import br.ufrgs.inf.controller.EquipmentService;
 import br.ufrgs.inf.controller.EventManager;
+import br.ufrgs.inf.data.builders.CameraEventBuilder;
+import br.ufrgs.inf.data.domain.EquipmentStatus;
+import br.ufrgs.inf.data.domain.Recording;
+import br.ufrgs.inf.data.events.CameraEvent;
 import br.ufrgs.inf.equipment.*;
 import br.ufrgs.inf.event.Dispatcher;
 import br.ufrgs.inf.event.Queue;
@@ -16,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 public class Main extends Application {
@@ -57,6 +62,9 @@ public class Main extends Application {
 
         final AppController appController = new AppController(queue, equipmentService);
 
+        final LocalDateTime now = LocalDateTime.now();
+
+
         final URL fxml = Paths.get("./src/main/resources/app-main.fxml")
                               .toUri()
                               .toURL();
@@ -64,6 +72,18 @@ public class Main extends Application {
         final FXMLLoader loader = new FXMLLoader(fxml);
 
         final AppUI controller = new AppUI(appController, eventManager);
+
+        final String cameraId = appController.createCameraEvent(now, now, Recording.ON, EquipmentStatus.ON);
+
+        final CameraEvent cameraEvent = new CameraEventBuilder()
+                .start(now)
+                .end(now)
+                .equipmentStatus(EquipmentStatus.ON)
+                .recording(Recording.ON)
+                .id(cameraId)
+                .build();
+
+        eventManager.add(cameraEvent);
 
         new Dispatcher(uiQueue, Collections.singletonList(controller));
 

@@ -51,7 +51,7 @@ public class MobileEvent extends DefaultEvent {
 
     public static MobileEvent defaultInstance() {
         final LocalDateTime now = LocalDateTime.now();
-        return new MobileEvent(Operation.POST, null, now, now, MobileSpeed.values()[0], EquipmentStatus.values()[0]);
+        return new MobileEvent(Operation.POST, null, now, now, MobileSpeed.MEDIUM, EquipmentStatus.OFF);
     }
 
     public MobileSpeed getSpeed() {
