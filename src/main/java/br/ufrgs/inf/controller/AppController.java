@@ -24,7 +24,6 @@ public class AppController {
         return this.equipmentService.getBabyStatus() != BabyStatus.SLEEPING;
     }
 
-    /* POST */
     public void wakeUpBaby() {
         CameraEvent event = new CameraEventBuilder()
                 .operation(Operation.ACTION)
@@ -45,6 +44,15 @@ public class AppController {
         this.queue.enqueue(event);
     }
 
+    public void makeSound() {
+        SoundEvent event = new SoundEventBuilder()
+                .operation(Operation.ACTION)
+                .eventName(EventName.BABY_WAKE_UP)
+                .build();
+        this.queue.enqueue(event);
+    }
+
+    /* POST */
     public String createAquecedorEvent(LocalDateTime begin, LocalDateTime end, EquipmentStatus status) {
         AquecedorEvent event = new AquecedorEventBuilder()
                 .operation(Operation.POST)

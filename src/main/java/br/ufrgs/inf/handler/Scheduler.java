@@ -29,14 +29,28 @@ public class Scheduler<T extends DefaultEvent> {
     }
 
     public void scheduleEvent(T event) {
-        switch(event.getOperation()) {
-            case POST: this.events.add(event); break;
-            case PUT: this.replaceScheduled(event); break;
-            case DELETE: this.removeEvent(event); break;
-            case PAUSE: this.pauseEvent(event); break;
-            case RESUME: this.resumeEvent(event); break;
-            case ACTION: startEvent(event); break;
-            case STATUS_CHANGED: System.out.println("[Warn] Schedule recebeu STATUS_CHANGED"); break;
+        switch (event.getOperation()) {
+            case POST:
+                this.events.add(event);
+                break;
+            case PUT:
+                this.replaceScheduled(event);
+                break;
+            case DELETE:
+                this.removeEvent(event);
+                break;
+            case PAUSE:
+                this.pauseEvent(event);
+                break;
+            case RESUME:
+                this.resumeEvent(event);
+                break;
+            case ACTION:
+                startEvent(event);
+                break;
+            case STATUS_CHANGED:
+                System.out.println("[Warn] Schedule recebeu STATUS_CHANGED");
+                break;
         }
     }
 
@@ -53,12 +67,16 @@ public class Scheduler<T extends DefaultEvent> {
     public void startEvent(T event) {
         if (startEventCallback != null)
             startEventCallback.apply(event);
-    };
+    }
+
+    ;
 
     public void endEvent(T event) {
         if (endEventCallback != null)
             endEventCallback.apply(event);
-    };
+    }
+
+    ;
 
     public void removeEvent(T event) {
         final String id = event.getId();
@@ -68,20 +86,31 @@ public class Scheduler<T extends DefaultEvent> {
 
     public void replaceScheduled(T event) {
         IntStream.range(0, this.events.size())
-                 .filter(idx -> this.events.get(idx).getId().equals(event.getId()))
-                 .findFirst()
-                 .ifPresent(idx -> this.events.set(idx, event));
+                .filter(idx -> this.events.get(idx).getId().equals(event.getId()))
+                .map(idx -> {
+                    this.events.set(idx, event);
+                    return idx;
+                })
+                .findFirst()
+                .orElseGet(() -> {
+                    System.out.println("Criei");
+                    this.events.add(event);
+                    return 0;
+                });
+
+        ;
     }
 
     private void run() {
         LocalDateTime currentDate = LocalDateTime.now();
 
-        if(currentEvent != null && currentEvent.getEnd() != null && currentEvent.getEnd().compareTo(currentDate) <= 0) {
+        if (currentEvent != null && currentEvent.getEnd() != null && currentEvent.getEnd().compareTo(currentDate) <= 0) {
+            System.out.println("Ending " + currentEvent);
             endEvent(currentEvent);
             currentEvent = null;
         }
 
-        for(T event : this.events) {
+        for (T event : this.events) {
             if (event.getStart().compareTo(currentDate) <= 0) {
                 System.out.println("Starting " + event);
                 currentEvent = event;

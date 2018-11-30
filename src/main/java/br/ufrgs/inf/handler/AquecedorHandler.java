@@ -42,10 +42,10 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
         this.aquecedor.turnOff();
 
         sendUiQueue(new AquecedorEventBuilder()
-            .operation(Operation.STATUS_CHANGED)
-            .equipmentStatus(aquecedor.getEquipmentStatus())
-            .id(event.getId())
-            .build());
+                .operation(Operation.STATUS_CHANGED)
+                .equipmentStatus(aquecedor.getEquipmentStatus())
+                .id(event.getId())
+                .build());
         return 0;
     }
 
@@ -63,7 +63,6 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
 
     public Integer handleEndEvent(AquecedorEvent event) {
         this.aquecedor.turnOff();
-        this.aquecedor.changeTemperature(Temperature.COLD);
 
         sendUiQueue(new AquecedorEventBuilder()
                 .operation(Operation.STATUS_CHANGED)
@@ -77,7 +76,6 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
 
     public Integer handleStartEvent(AquecedorEvent event) {
         AquecedorEventBuilder eventBuilder = new AquecedorEventBuilder();
-
         if (event.getName() == EventName.BABY_SLEPT) {
             System.out.println("[Aquecedor Handler] : BABY_SLEPT");
             aquecedor.turnOff();
@@ -96,13 +94,16 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
                     .equipmentStatus(EquipmentStatus.ON)
                     .id(event.getId())
                     .temperature(Temperature.AMBIENT);
-        } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
-
+        } else if (event.getName() != null) {
+            return 0;
+        } // Descartar eventos com nome que não foram tratados
         if (event.getTemperature() != null && event.getTemperature() != aquecedor.getTemperature()) {
             aquecedor.changeTemperature(event.getTemperature());
+            aquecedor.turnOn();
             eventBuilder
                     .temperature(event.getTemperature())
                     .id(event.getId())
+                    .equipmentStatus(event.getEquipmentStatus())
                     .operation(Operation.STATUS_CHANGED);
         }
         if (event.getEquipmentStatus() != null && event.getEquipmentStatus() != aquecedor.getEquipmentStatus()) {

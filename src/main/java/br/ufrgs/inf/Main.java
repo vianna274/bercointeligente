@@ -32,6 +32,7 @@ public class Main extends Application {
         final Som som = new Som();
         final Mobile mobile = new Mobile();
         final Luz luz = new Luz();
+        final Sound sound = new Sound();
 
         final Queue queue = new Queue();
         final Queue uiQueue = new Queue();
@@ -41,23 +42,25 @@ public class Main extends Application {
         final MobileHandler mobileHandler = new MobileHandler(mobile, queue, uiQueue);
         final SomHandler somHandler = new SomHandler(som, queue, uiQueue);
         final LuzHandler luzHandler = new LuzHandler(luz, queue, uiQueue);
+        final SoundHandler soundHandler = new SoundHandler(sound, queue, uiQueue);
 
         new Dispatcher(queue,
-            Collections.singletonList(aquecedorHandler),
-            Collections.singletonList(cameraHandler),
-            Collections.singletonList(luzHandler),
-            Collections.singletonList(mobileHandler),
-            Collections.singletonList(somHandler)
-        );
+                Collections.singletonList(aquecedorHandler),
+                Collections.singletonList(cameraHandler),
+                Collections.singletonList(luzHandler),
+                Collections.singletonList(mobileHandler),
+                Collections.singletonList(somHandler),
+                Collections.singletonList(soundHandler)
+                );
 
         final EventManager eventManager = new EventManager();
 
         final EquipmentService equipmentService = new EquipmentService(
-            aquecedor,
-            camera,
-            luz,
-            mobile,
-            som
+                aquecedor,
+                camera,
+                luz,
+                mobile,
+                som
         );
 
         final AppController appController = new AppController(queue, equipmentService);
@@ -66,8 +69,8 @@ public class Main extends Application {
 
 
         final URL fxml = Paths.get("./src/main/resources/app-main.fxml")
-                              .toUri()
-                              .toURL();
+                .toUri()
+                .toURL();
 
         final FXMLLoader loader = new FXMLLoader(fxml);
 

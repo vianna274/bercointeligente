@@ -703,6 +703,10 @@ public class AppUI implements EventListener<DefaultEvent> {
         else this.appController.wakeUpBaby();
     }
 
+    public void onClickMakeSound(final ActionEvent event) {
+        this.appController.makeSound();
+    }
+
     private void showStage(final Stage stage, final ActionEvent event) {
         this.closeCurrentScreen(event);
         stage.show();

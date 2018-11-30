@@ -16,6 +16,7 @@ public class Dispatcher {
     private List<EventListener<LuzEvent>> luzListeners;
     private List<EventListener<MobileEvent>> mobileListeners;
     private List<EventListener<SomEvent>> somListeners;
+    private List<EventListener<SoundEvent>> soundListeners;
     private List<EventListener<DefaultEvent>> uiListeners;
     private boolean isUi;
 
@@ -32,13 +33,15 @@ public class Dispatcher {
                       List<EventListener<CameraEvent>> cameraListeners,
                       List<EventListener<LuzEvent>> luzListeners,
                       List<EventListener<MobileEvent>> mobileListeners,
-                      List<EventListener<SomEvent>> somListeners) {
+                      List<EventListener<SomEvent>> somListeners,
+                      List<EventListener<SoundEvent>> soundListeners) {
         this.queue = queue;
         this.aquecedorListeners = aquecedorListeners;
         this.cameraListeners = cameraListeners;
         this.luzListeners = luzListeners;
         this.mobileListeners = mobileListeners;
         this.somListeners = somListeners;
+        this.soundListeners = soundListeners;
         this.uiListeners = new ArrayList<>();
 
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -78,6 +81,11 @@ public class Dispatcher {
 
         if (event instanceof SomEvent) {
             somListeners.forEach(listener -> listener.onEvent((SomEvent) event));
+            System.out.printf("Som event : " + event.toString());
+        }
+
+        if (event instanceof SoundEvent) {
+            soundListeners.forEach(listener -> listener.onEvent((SoundEvent) event));
             System.out.printf("Som event : " + event.toString());
         }
     }

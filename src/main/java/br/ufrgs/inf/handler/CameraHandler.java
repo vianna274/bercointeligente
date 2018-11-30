@@ -89,6 +89,13 @@ public class CameraHandler implements EventListener<CameraEvent> {
         queue.enqueue(mobileEvent);
         queue.enqueue(somEvent);
         queue.enqueue(luzEvent);
+
+        CameraEvent event = new CameraEventBuilder()
+                .operation(Operation.STATUS_CHANGED)
+                .babyStatus(BabyStatus.AWAKING)
+                .build();
+
+        uiQueue.enqueue(event);
     }
 
     private void handleBabySleeping() {
