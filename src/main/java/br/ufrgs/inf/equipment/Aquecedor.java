@@ -1,50 +1,22 @@
 package br.ufrgs.inf.equipment;
 
-import br.ufrgs.inf.data.domain.EquipmentStatus;
 import br.ufrgs.inf.data.domain.Temperature;
 
-import java.util.function.Function;
 
-public class Aquecedor {
+public class Aquecedor extends Component {
 
-    private EquipmentStatus equipmentStatus;
     private Temperature temperature;
 
-    private Function<String, Integer> statusCallback;
-    private Function<String, Integer> temperatureCallback;
-
     public Aquecedor() {
-        this.equipmentStatus = EquipmentStatus.OFF;
+        super();
         this.temperature = Temperature.AMBIENT;
-        this.statusCallback = null;
-        this.temperatureCallback = null;
     }
 
     public void changeTemperature(Temperature temperature) {
         this.temperature = temperature;
-        if (temperatureCallback != null)
-            temperatureCallback.apply(temperature.toString());
-    }
-
-    public void toggle() {
-        this.equipmentStatus = this.equipmentStatus == EquipmentStatus.OFF ? EquipmentStatus.ON : EquipmentStatus.OFF;
-        if (statusCallback != null)
-            statusCallback.apply(this.equipmentStatus.toString());
-    }
-
-    public EquipmentStatus getEquipmentStatus() {
-        return equipmentStatus;
     }
 
     public Temperature getTemperature() {
         return temperature;
-    }
-
-    public void setStatusCallback(Function<String, Integer> statusCallback) {
-        this.statusCallback = statusCallback;
-    }
-
-    public void setTemperatureCallback(Function<String, Integer> temperatureCallback) {
-        this.temperatureCallback = temperatureCallback;
     }
 }

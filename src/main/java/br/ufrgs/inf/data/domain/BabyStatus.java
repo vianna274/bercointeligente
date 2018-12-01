@@ -3,7 +3,7 @@ package br.ufrgs.inf.data.domain;
 public enum BabyStatus {
 
     AWAKE("Acordado"),
-
+    AWAKING ("Cansado"),
     SLEEPING("Dormindo");
 
     private String label;

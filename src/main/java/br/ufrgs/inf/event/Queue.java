@@ -1,6 +1,6 @@
 package br.ufrgs.inf.event;
 
-import br.ufrgs.inf.data.Event;
+import br.ufrgs.inf.data.events.Event;
 
 import java.util.ArrayList;
 import java.util.Collections;

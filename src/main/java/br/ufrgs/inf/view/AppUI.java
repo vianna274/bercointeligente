@@ -2,10 +2,12 @@ package br.ufrgs.inf.view;
 
 import br.ufrgs.inf.controller.AppController;
 import br.ufrgs.inf.controller.EventManager;
-import br.ufrgs.inf.data.*;
 import br.ufrgs.inf.data.domain.*;
+import br.ufrgs.inf.data.events.*;
+import br.ufrgs.inf.event.EventListener;
+import br.ufrgs.inf.view.components.DateTimePicker;
 import br.ufrgs.inf.view.components.DateTimePickerCell;
-import br.ufrgs.inf.view.components.EditableTextCell;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -16,10 +18,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import tornadofx.control.DateTimePicker;
 
 import java.net.URL;
 import java.nio.file.Paths;
@@ -32,88 +32,136 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AppUI {
+public class AppUI implements EventListener<DefaultEvent> {
 
-    @FXML private ComboBox<String> type;
+    @FXML
+    private ComboBox<String> type;
 
-    @FXML private Button addEvent;
-    @FXML private Button deteleEvent;
+    @FXML
+    private Button addEvent;
+    @FXML
+    private Button deteleEvent;
 
-    @FXML private Label eventTypeTitle;
+    @FXML
+    private Label eventTypeTitle;
 
     @FXML private Label babyStatus;
     @FXML private Label babyBottleStatus;
+    @FXML private Label cameraStatus;
+    @FXML private Label soundStatus;
+    @FXML private Label mobileSpeedStatus;
+    @FXML private Label lightStatus;
 
-    @FXML private TableView<CameraEvent> tableViewCamera;
-    @FXML private TableColumn<CameraEvent, Recording> recordingCameraCol;
-    @FXML private TableColumn<CameraEvent, String> nameCameraCol;
-    @FXML private TableColumn<CameraEvent, EquipmentStatus> equipmentStatusCameraCol;
-    @FXML private TableColumn<CameraEvent, LocalDateTime> startCameraCol;
-    @FXML private TableColumn<CameraEvent, LocalDateTime> endCameraCol;
+    @FXML
+    private TableView<CameraEvent> tableViewCamera;
+    @FXML
+    private TableColumn<CameraEvent, Recording> recordingCameraCol;
+    @FXML
+    private TableColumn<CameraEvent, EquipmentStatus> equipmentStatusCameraCol;
+    @FXML
+    private TableColumn<CameraEvent, LocalDateTime> startCameraCol;
+    @FXML
+    private TableColumn<CameraEvent, LocalDateTime> endCameraCol;
 
-    @FXML private TableView<LuzEvent> tableViewLight;
-    @FXML private TableColumn<LuzEvent, String> nameLightCol;
-    @FXML private TableColumn<LuzEvent, EquipmentStatus> equipmentStatusLightCol;
-    @FXML private TableColumn<LuzEvent, LocalDateTime> startLightCol;
-    @FXML private TableColumn<LuzEvent, LocalDateTime> endLightCol;
+    @FXML
+    private TableView<LuzEvent> tableViewLight;
+    @FXML
+    private TableColumn<LuzEvent, EquipmentStatus> equipmentStatusLightCol;
+    @FXML
+    private TableColumn<LuzEvent, LocalDateTime> startLightCol;
+    @FXML
+    private TableColumn<LuzEvent, LocalDateTime> endLightCol;
 
-    @FXML private TableView<SomEvent> tableViewSound;
-    @FXML private TableColumn<SomEvent, MusicVolume> volumeSoundCol;
-    @FXML private TableColumn<SomEvent, Song> musicSoundCol;
-    @FXML private TableColumn<SomEvent, String> nameSoundCol;
-    @FXML private TableColumn<SomEvent, EquipmentStatus> equipmentStatusSoundCol;
-    @FXML private TableColumn<SomEvent, LocalDateTime> startSoundCol;
-    @FXML private TableColumn<SomEvent, LocalDateTime> endSoundCol;
+    @FXML
+    private TableView<SomEvent> tableViewSound;
+    @FXML
+    private TableColumn<SomEvent, MusicVolume> volumeSoundCol;
+    @FXML
+    private TableColumn<SomEvent, Song> musicSoundCol;
+    @FXML
+    private TableColumn<SomEvent, EquipmentStatus> equipmentStatusSoundCol;
+    @FXML
+    private TableColumn<SomEvent, LocalDateTime> startSoundCol;
+    @FXML
+    private TableColumn<SomEvent, LocalDateTime> endSoundCol;
 
-    @FXML private TableView<MobileEvent> tableViewMobile;
-    @FXML private TableColumn<MobileEvent, String> nameMobileCol;
-    @FXML private TableColumn<MobileEvent, MobileSpeed> velocityMobileCol;
-    @FXML private TableColumn<MobileEvent, EquipmentStatus> equipmentStatusMobileCol;
-    @FXML private TableColumn<MobileEvent, LocalDateTime> startMobileCol;
-    @FXML private TableColumn<MobileEvent, LocalDateTime> endMobileCol;
+    @FXML
+    private TableView<MobileEvent> tableViewMobile;
+    @FXML
+    private TableColumn<MobileEvent, MobileSpeed> velocityMobileCol;
+    @FXML
+    private TableColumn<MobileEvent, EquipmentStatus> equipmentStatusMobileCol;
+    @FXML
+    private TableColumn<MobileEvent, LocalDateTime> startMobileCol;
+    @FXML
+    private TableColumn<MobileEvent, LocalDateTime> endMobileCol;
 
-    @FXML private TableView<AquecedorEvent> tableViewHeater;
-    @FXML private TableColumn<AquecedorEvent, Temperature> temperatureHeaterCol;
-    @FXML private TableColumn<AquecedorEvent, String> nameHeaterCol;
-    @FXML private TableColumn<AquecedorEvent, EquipmentStatus> equipmentStatusHeaterCol;
-    @FXML private TableColumn<AquecedorEvent, LocalDateTime> startHeaterCol;
-    @FXML private TableColumn<AquecedorEvent, LocalDateTime> endHeaterCol;
+    @FXML
+    private TableView<AquecedorEvent> tableViewHeater;
+    @FXML
+    private TableColumn<AquecedorEvent, Temperature> temperatureHeaterCol;
+    @FXML
+    private TableColumn<AquecedorEvent, EquipmentStatus> equipmentStatusHeaterCol;
+    @FXML
+    private TableColumn<AquecedorEvent, LocalDateTime> startHeaterCol;
+    @FXML
+    private TableColumn<AquecedorEvent, LocalDateTime> endHeaterCol;
 
-    @FXML private Pane mobilePane;
-    @FXML private Pane heaterPane;
-    @FXML private Pane cameraPane;
-    @FXML private Pane soundPane;
-    @FXML private Pane lightPane;
+    @FXML
+    private Pane mobilePane;
+    @FXML
+    private Pane heaterPane;
+    @FXML
+    private Pane cameraPane;
+    @FXML
+    private Pane soundPane;
+    @FXML
+    private Pane lightPane;
 
-    @FXML private TextField cameraName;
-    @FXML private ComboBox<Recording> cameraRecording;
-    @FXML private ComboBox<EquipmentStatus> cameraEquipmentStatus;
-    @FXML private DateTimePicker cameraStart;
-    @FXML private DateTimePicker cameraEnd;
+    @FXML
+    private ComboBox<Recording> cameraRecording;
+    @FXML
+    private ComboBox<EquipmentStatus> cameraEquipmentStatus;
+    @FXML
+    private DateTimePicker cameraStart;
+    @FXML
+    private DateTimePicker cameraEnd;
 
-    @FXML private TextField lightName;
-    @FXML private ComboBox<EquipmentStatus> lightEquipmentStatus;
-    @FXML private DateTimePicker lightStart;
-    @FXML private DateTimePicker lightEnd;
+    @FXML
+    private ComboBox<EquipmentStatus> lightEquipmentStatus;
+    @FXML
+    private DateTimePicker lightStart;
+    @FXML
+    private DateTimePicker lightEnd;
 
-    @FXML private TextField heaterName;
-    @FXML private ComboBox<Temperature> heaterTemperature;
-    @FXML private ComboBox<EquipmentStatus> heaterEquipmentStatus;
-    @FXML private DateTimePicker heaterStart;
-    @FXML private DateTimePicker heaterEnd;
+    @FXML
+    private ComboBox<Temperature> heaterTemperature;
+    @FXML
+    private ComboBox<EquipmentStatus> heaterEquipmentStatus;
+    @FXML
+    private DateTimePicker heaterStart;
+    @FXML
+    private DateTimePicker heaterEnd;
 
-    @FXML private TextField soundName;
-    @FXML private ComboBox<Song> soundMusic;
-    @FXML private ComboBox<MusicVolume> soundVolume;
-    @FXML private ComboBox<EquipmentStatus> soundEquipmentStatus;
-    @FXML private DateTimePicker soundStart;
-    @FXML private DateTimePicker soundEnd;
+    @FXML
+    private ComboBox<Song> soundMusic;
+    @FXML
+    private ComboBox<MusicVolume> soundVolume;
+    @FXML
+    private ComboBox<EquipmentStatus> soundEquipmentStatus;
+    @FXML
+    private DateTimePicker soundStart;
+    @FXML
+    private DateTimePicker soundEnd;
 
-    @FXML private TextField mobileName;
-    @FXML private ComboBox<MobileSpeed> mobileVelocity;
-    @FXML private ComboBox<EquipmentStatus> mobileEquipmentStatus;
-    @FXML private DateTimePicker mobileStart;
-    @FXML private DateTimePicker mobileEnd;
+    @FXML
+    private ComboBox<MobileSpeed> mobileVelocity;
+    @FXML
+    private ComboBox<EquipmentStatus> mobileEquipmentStatus;
+    @FXML
+    private DateTimePicker mobileStart;
+    @FXML
+    private DateTimePicker mobileEnd;
 
     private Map<Equipment, Pane> paneViews;
 
@@ -167,6 +215,10 @@ public class AppUI {
         Optional.ofNullable(this.tableViewSound).ifPresent(this::configSoundTable);
         Optional.ofNullable(this.babyStatus).ifPresent(this::configBabyStatus);
         Optional.ofNullable(this.babyBottleStatus).ifPresent(this::configBabyBottleStatus);
+        Optional.ofNullable(this.cameraStatus).ifPresent(this::configCameraStatus);
+        Optional.ofNullable(this.soundStatus).ifPresent(this::configSoundStatus);
+        Optional.ofNullable(this.mobileSpeedStatus).ifPresent(this::configMobileStatus);
+        Optional.ofNullable(this.lightStatus).ifPresent(this::configLightStatus);
         Optional.ofNullable(this.eventTypeTitle).ifPresent(this::configEventTypeTitle);
         Optional.ofNullable(this.cameraPane).ifPresent(this::configCameraPane);
         Optional.ofNullable(this.lightPane).ifPresent(this::configLightPane);
@@ -187,40 +239,20 @@ public class AppUI {
 
     private void configMobilePane(final Pane mobilePane) {
         this.mobileEvent = MobileEvent.defaultInstance();
-        this.mobileName.setOnAction(igr -> this.mobileEvent.setName(this.mobileName.getText()));
-        this.mobileName.setOnMouseClicked(igr -> this.mobileEvent.setName(this.mobileName.getText()));
-        this.mobileName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.mobileEvent.setName(this.mobileName.getText());
-        });
 
         this.mobileVelocity.getItems().addAll(MobileSpeed.values());
         this.mobileVelocity.getSelectionModel().selectFirst();
         this.mobileVelocity.setOnAction(igr -> this.mobileEvent.setSpeed(this.mobileVelocity.getSelectionModel().getSelectedItem()));
 
-        this.mobileEquipmentStatus.getItems().addAll(EquipmentStatus.values());
-        this.mobileEquipmentStatus.getSelectionModel().selectFirst();
-        this.mobileEquipmentStatus.setOnAction(igr -> this.mobileEvent.setEquipmentStatus(this.mobileEquipmentStatus.getSelectionModel().getSelectedItem()));
-
         this.mobileStart.setValue(LocalDate.now());
-        this.mobileStart.setOnAction(igr -> this.mobileEvent.setStart(this.mobileStart.getDateTimeValue()));
-        this.mobileStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.mobileEvent.setStart(this.mobileStart.getDateTimeValue());
-        });
+        this.mobileStart.setOnAction(event -> this.mobileEvent.setStart(this.mobileStart.getDateTimeValue()));
 
         this.mobileEnd.setValue(LocalDate.now());
-        this.mobileEnd.setOnAction(igr -> this.mobileEvent.setEnd(this.mobileEnd.getDateTimeValue()));
-        this.mobileEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.mobileEvent.setEnd(this.mobileEnd.getDateTimeValue());
-        });
+        this.mobileEnd.setOnAction(event -> this.mobileEvent.setEnd(this.mobileEnd.getDateTimeValue()));
     }
 
     private void configSoundPane(final Pane soundPane) {
         this.soundEvent = SomEvent.defaultInstance();
-        this.soundName.setOnAction(igr -> this.soundEvent.setName(this.soundName.getText()));
-        this.soundName.setOnMouseClicked(igr -> this.soundEvent.setName(this.soundName.getText()));
-        this.soundName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.soundEvent.setName(this.soundName.getText());
-        });
 
         this.soundMusic.getItems().addAll(Song.values());
         this.soundMusic.getSelectionModel().selectFirst();
@@ -230,105 +262,49 @@ public class AppUI {
         this.soundVolume.getSelectionModel().selectFirst();
         this.soundVolume.setOnAction(igr -> this.soundEvent.setMusicVolume(this.soundVolume.getSelectionModel().getSelectedItem()));
 
-        this.soundEquipmentStatus.getItems().addAll(EquipmentStatus.values());
-        this.soundEquipmentStatus.getSelectionModel().selectFirst();
-        this.soundEquipmentStatus.setOnAction(igr -> this.soundEvent.setEquipmentStatus(this.soundEquipmentStatus.getSelectionModel().getSelectedItem()));
-
         this.soundStart.setValue(LocalDate.now());
-        this.soundStart.setOnAction(igr -> this.soundEvent.setStart(this.soundStart.getDateTimeValue()));
-        this.soundStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.soundEvent.setStart(this.soundEnd.getDateTimeValue());
-        });
+        this.soundStart.setOnAction(event -> this.soundEvent.setStart(this.soundStart.getDateTimeValue()));
 
         this.soundEnd.setValue(LocalDate.now());
-        this.soundEnd.setOnAction(igr -> this.soundEvent.setEnd(this.soundEnd.getDateTimeValue()));
-        this.soundEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.soundEvent.setEnd(this.soundEnd.getDateTimeValue());
-        });
+        this.soundEnd.setOnAction(event -> this.soundEvent.setEnd(this.soundEnd.getDateTimeValue()));
     }
 
     private void configHeaterPane(final Pane heaterPane) {
         this.heaterEvent = AquecedorEvent.defaultInstance();
-        this.heaterName.setOnAction(igr -> this.heaterEvent.setName(this.heaterName.getText()));
-        this.heaterName.setOnMouseClicked(igr -> this.heaterEvent.setName(this.heaterName.getText()));
-        this.heaterName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.heaterEvent.setName(this.heaterName.getText());
-        });
 
         this.heaterTemperature.getItems().addAll(Temperature.values());
         this.heaterTemperature.getSelectionModel().selectFirst();
         this.heaterTemperature.setOnAction(igr -> this.heaterEvent.setTemperature(this.heaterTemperature.getSelectionModel().getSelectedItem()));
 
-        this.heaterEquipmentStatus.getItems().addAll(EquipmentStatus.values());
-        this.heaterEquipmentStatus.getSelectionModel().selectFirst();
-        this.heaterEquipmentStatus.setOnAction(igr -> this.heaterEvent.setEquipmentStatus(this.heaterEquipmentStatus.getSelectionModel().getSelectedItem()));
-
         this.heaterStart.setValue(LocalDate.now());
-        this.heaterStart.setOnAction(igr -> this.heaterEvent.setStart(this.heaterStart.getDateTimeValue()));
-        this.heaterStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.heaterEvent.setStart(this.heaterStart.getDateTimeValue());
-        });
+        this.heaterStart.setOnAction(event -> this.heaterEvent.setStart(this.heaterStart.getDateTimeValue()));
 
         this.heaterEnd.setValue(LocalDate.now());
-        this.heaterEnd.setOnAction(igr -> this.heaterEvent.setEnd(this.heaterEnd.getDateTimeValue()));
-        this.heaterEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.heaterEvent.setEnd(this.heaterEnd.getDateTimeValue());
-        });
+        this.heaterEnd.setOnAction(event -> this.heaterEvent.setEnd(this.heaterEnd.getDateTimeValue()));
     }
 
     private void configLightPane(final Pane lightPane) {
         this.lightEvent = LuzEvent.defaultInstance();
-        this.lightName.setOnAction(igr -> this.lightEvent.setName(this.lightName.getText()));
-        this.lightName.setOnMouseClicked(igr -> this.lightEvent.setName(this.heaterName.getText()));
-        this.lightName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.lightEvent.setName(this.lightName.getText());
-        });
-
-        this.lightEquipmentStatus.getItems().addAll(EquipmentStatus.values());
-        this.lightEquipmentStatus.getSelectionModel().selectFirst();
-        this.lightEquipmentStatus.setOnAction(igr -> this.lightEvent.setEquipmentStatus(this.lightEquipmentStatus.getSelectionModel().getSelectedItem()));
 
         this.lightStart.setValue(LocalDate.now());
-        this.lightStart.setOnAction(igr -> this.lightEvent.setStart(this.lightStart.getDateTimeValue()));
-        this.lightStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.lightEvent.setStart(this.lightStart.getDateTimeValue());
-        });
+        this.lightStart.setOnAction(event -> this.lightEvent.setStart(this.lightStart.getDateTimeValue()));
 
         this.lightEnd.setValue(LocalDate.now());
-        this.lightEnd.setOnAction(igr -> this.lightEvent.setEnd(this.lightEnd.getDateTimeValue()));
-        this.lightEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.lightEvent.setEnd(this.lightEnd.getDateTimeValue());
-        });
+        this.lightEnd.setOnAction(event -> this.lightEvent.setEnd(this.lightEnd.getDateTimeValue()));
     }
 
     private void configCameraPane(final Pane cameraPane) {
         this.cameraEvent = CameraEvent.defaultInstance();
-        this.cameraName.setOnAction(igr -> this.cameraEvent.setName(this.cameraName.getText()));
-        this.cameraName.setOnMouseClicked(igr -> this.heaterEvent.setName(this.heaterName.getText()));
-        this.cameraName.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.cameraEvent.setName(this.cameraName.getText());
-        });
 
         this.cameraRecording.getItems().addAll(Recording.values());
         this.cameraRecording.getSelectionModel().selectFirst();
         this.cameraRecording.setOnAction(igr -> this.cameraEvent.setRecording(this.cameraRecording.getSelectionModel().getSelectedItem()));
 
-        this.cameraEquipmentStatus.getItems().addAll(EquipmentStatus.values());
-        this.cameraEquipmentStatus.getSelectionModel().selectFirst();
-        this.cameraEquipmentStatus.setOnAction(igr -> this.cameraEvent.setEquipmentStatus(this.cameraEquipmentStatus.getSelectionModel().getSelectedItem()));
-
         this.cameraStart.setValue(LocalDate.now());
-        this.cameraStart.setOnAction(igr -> this.cameraEvent.setStart(this.cameraStart.getDateTimeValue()));
-        this.cameraStart.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.cameraEvent.setStart(this.cameraStart.getDateTimeValue());
-        });
+        this.cameraStart.setOnAction(event -> this.cameraEvent.setStart(this.cameraStart.getDateTimeValue()));
 
         this.cameraEnd.setValue(LocalDate.now());
-        this.cameraEnd.setOnAction(igr -> this.cameraEvent.setEnd(this.cameraEnd.getDateTimeValue()));
-        this.cameraEnd.focusedProperty().addListener((a, b, isFocused) -> {
-            if (!isFocused) this.cameraEvent.setEnd(this.cameraEnd.getDateTimeValue());
-        });
-
+        this.cameraEnd.setOnAction(event -> this.cameraEvent.setEnd(this.cameraEnd.getDateTimeValue()));
     }
 
     private void configEventTypeTitle(final Label eventTypeTitle) {
@@ -339,35 +315,110 @@ public class AppUI {
     }
 
     private void configBabyStatus(final Label babyStatus) {
-        babyStatus.setText(this.appController.getBabyStatus().toString());
+        this.eventManager.addCameraListener(c -> {
+            final CameraEvent cc = CameraEvent.merge((CameraEvent) c);
+
+            final BabyStatus status = cc.getBabyStatus() == null ? CameraEvent.defaultInstance().getBabyStatus() : cc.getBabyStatus();
+
+            this.babyStatus.setText(status.toString());
+        });
+
+        final CameraEvent event = this.eventManager.getCurrentCameraEvent();
+
+        final String text = event != null ? event.getBabyStatus().toString() : BabyStatus.SLEEPING.toString();
+
+        this.babyStatus.setText(text);
     }
+
     private void configBabyBottleStatus(final Label babyBottleStatus) {
-        this.appController.addBabyBottleListener(b -> this.babyBottleStatus.setText(b.getBabyBottleStatus().toString()));
-        this.babyBottleStatus.setText(this.appController.getBabyBottle().getBabyBottleStatus().toString());
+        this.eventManager.addHeaterListener(b -> {
+            final AquecedorEvent c = AquecedorEvent.merge((AquecedorEvent) b);
+
+            this.babyBottleStatus.setText(c.getEquipmentStatus() != EquipmentStatus.OFF ? c.getEquipmentStatus().toString() + " - " + c.getTemperature().toString() : EquipmentStatus.OFF.toString());
+        });
+
+        final AquecedorEvent event = this.eventManager.getCurrentHeaterEvent();
+
+        final String text = event != null && event.getEquipmentStatus() != EquipmentStatus.OFF ? event.getEquipmentStatus().toString() + " - " + event.getTemperature().toString() : EquipmentStatus.OFF.toString();
+
+        this.babyBottleStatus.setText(text);
+    }
+
+    private void configCameraStatus(final Label cameraStatus) {
+        this.eventManager.addCameraListener(camera -> {
+            final CameraEvent c = CameraEvent.merge((CameraEvent) camera);
+
+            this.cameraStatus.setText(c.getRecording().toString());
+        });
+
+        final CameraEvent event = this.eventManager.getCurrentCameraEvent();
+
+        final String text = event != null && event.getRecording() != null ? event.getRecording().toString() : Recording.OFF.toString();
+
+        this.cameraStatus.setText(text);
+    }
+
+    private void configSoundStatus(final Label soundStatus) {
+        this.eventManager.addSoundListener(sound -> {
+            final SomEvent s = SomEvent.merge((SomEvent) sound);
+            this.soundStatus.setText(s.getEquipmentStatus() != EquipmentStatus.OFF ? s.getEquipmentStatus().toString() + " - " + s.getMusicVolume().toString() : EquipmentStatus.OFF.toString());
+        });
+
+        final SomEvent event = this.eventManager.getCurrentSomEvent();
+
+        final String text = event != null && event.getEquipmentStatus() != EquipmentStatus.OFF ? event.getEquipmentStatus().toString() + " - " + event.getMusicVolume().toString() : EquipmentStatus.OFF.toString();
+
+        this.soundStatus.setText(text);
+    }
+
+    private void configLightStatus(final Label lightStatus) {
+        this.eventManager.addLightListener(l -> {
+            final LuzEvent c = LuzEvent.merge((LuzEvent) l);
+            this.lightStatus.setText(c.getEquipmentStatus().toString());
+        });
+
+        final LuzEvent event = this.eventManager.getCurrentLuzEvent();
+
+        final String text = event != null ? event.getEquipmentStatus().toString() : EquipmentStatus.OFF.toString();
+
+        this.lightStatus.setText(text);
+    }
+
+    private void configMobileStatus(final Label mobileStatus) {
+        this.eventManager.addMobileListener(m -> {
+            final MobileEvent e = MobileEvent.merge((MobileEvent) m);
+            this.mobileSpeedStatus.setText(e.getEquipmentStatus() != EquipmentStatus.OFF ? e.getEquipmentStatus().toString() + " - " + e.getSpeed().toString() : EquipmentStatus.OFF.toString());
+        });
+
+        final MobileEvent event = this.eventManager.getCurrentMobileEvent();
+
+        final String text = event != null && event.getEquipmentStatus() != EquipmentStatus.OFF ? event.getEquipmentStatus().toString() + " - " + event.getSpeed().toString() : EquipmentStatus.OFF.toString();
+
+        this.mobileSpeedStatus.setText(text);
     }
 
     private void configSoundTable(final TableView<SomEvent> tableViewSound) {
         this.startSoundCol.setCellFactory(DateTimePickerCell.instance());
         this.startSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startSoundCol.setOnEditCommit(t -> this.editEvent(t.getRowValue()));
 
         this.endSoundCol.setCellFactory(DateTimePickerCell.instance());
         this.endSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
-
-        this.nameSoundCol.setCellFactory(EditableTextCell.instance());
-        this.nameSoundCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameSoundCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+        this.endSoundCol.setOnEditCommit(t -> this.editEvent(t.getRowValue()));
 
         this.volumeSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getMusicVolume()));
         this.volumeSoundCol.setCellFactory(ComboBoxTableCell.forTableColumn(MusicVolume.values()));
-        this.volumeSoundCol.setOnEditCommit(t -> t.getRowValue().setMusicVolume(t.getNewValue()));
+        this.volumeSoundCol.setOnEditCommit(t -> {
+            t.getRowValue().setMusicVolume(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.musicSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getCurrentSong()));
         this.musicSoundCol.setCellFactory(ComboBoxTableCell.forTableColumn(Song.values()));
-        this.musicSoundCol.setOnEditCommit(t -> t.getRowValue().setCurrentSong(t.getNewValue()));
-
-        this.equipmentStatusSoundCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEquipmentStatus()));
-        this.equipmentStatusSoundCol.setCellFactory(ComboBoxTableCell.forTableColumn(EquipmentStatus.values()));
-        this.equipmentStatusSoundCol.setOnEditCommit(t -> t.getRowValue().setEquipmentStatus(t.getNewValue()));
+        this.musicSoundCol.setOnEditCommit(t -> {
+            t.getRowValue().setCurrentSong(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewSound.setEditable(true);
         tableViewSound.setItems(FXCollections.observableList(this.eventManager.listEventByClass(SomEvent.class)));
@@ -376,21 +427,24 @@ public class AppUI {
     private void configMobileTable(final TableView<MobileEvent> tableViewMobile) {
         this.startMobileCol.setCellFactory(DateTimePickerCell.instance());
         this.startMobileCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startMobileCol.setOnEditCommit(t -> {
+            t.getRowValue().setStart(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.endMobileCol.setCellFactory(DateTimePickerCell.instance());
         this.endMobileCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
-
-        this.nameMobileCol.setCellFactory(EditableTextCell.instance());
-        this.nameMobileCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameMobileCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+        this.endMobileCol.setOnEditCommit(t -> {
+            t.getRowValue().setEnd(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.velocityMobileCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getSpeed()));
         this.velocityMobileCol.setCellFactory(ComboBoxTableCell.forTableColumn(MobileSpeed.values()));
-        this.velocityMobileCol.setOnEditCommit(t -> t.getRowValue().setSpeed(t.getNewValue()));
-
-        this.equipmentStatusMobileCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEquipmentStatus()));
-        this.equipmentStatusMobileCol.setCellFactory(ComboBoxTableCell.forTableColumn(EquipmentStatus.values()));
-        this.equipmentStatusMobileCol.setOnEditCommit(t -> t.getRowValue().setEquipmentStatus(t.getNewValue()));
+        this.velocityMobileCol.setOnEditCommit(t -> {
+            t.getRowValue().setSpeed(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewMobile.setEditable(true);
         tableViewMobile.setItems(FXCollections.observableList(this.eventManager.listEventByClass(MobileEvent.class)));
@@ -399,21 +453,24 @@ public class AppUI {
     private void configCameraTable(final TableView<CameraEvent> tableViewCamera) {
         this.startCameraCol.setCellFactory(DateTimePickerCell.instance());
         this.startCameraCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startCameraCol.setOnEditCommit(t -> {
+            t.getRowValue().setStart(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.endCameraCol.setCellFactory(DateTimePickerCell.instance());
         this.endCameraCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
-
-        this.nameCameraCol.setCellFactory(EditableTextCell.instance());
-        this.nameCameraCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameCameraCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+        this.endCameraCol.setOnEditCommit(t -> {
+            t.getRowValue().setEnd(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.recordingCameraCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getRecording()));
         this.recordingCameraCol.setCellFactory(ComboBoxTableCell.forTableColumn(Recording.values()));
-        this.recordingCameraCol.setOnEditCommit(t -> t.getRowValue().setRecording(t.getNewValue()));
-
-        this.equipmentStatusCameraCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEquipmentStatus()));
-        this.equipmentStatusCameraCol.setCellFactory(ComboBoxTableCell.forTableColumn(EquipmentStatus.values()));
-        this.equipmentStatusCameraCol.setOnEditCommit(t -> t.getRowValue().setEquipmentStatus(t.getNewValue()));
+        this.recordingCameraCol.setOnEditCommit(t -> {
+            t.getRowValue().setRecording(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewCamera.setEditable(true);
         tableViewCamera.setItems(FXCollections.observableList(this.eventManager.listEventByClass(CameraEvent.class)));
@@ -423,21 +480,24 @@ public class AppUI {
     private void configHeaterTable(final TableView<AquecedorEvent> tableViewHeater) {
         this.startHeaterCol.setCellFactory(DateTimePickerCell.instance());
         this.startHeaterCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startHeaterCol.setOnEditCommit(t -> {
+            t.getRowValue().setStart(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.endHeaterCol.setCellFactory(DateTimePickerCell.instance());
         this.endHeaterCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
-
-        this.nameHeaterCol.setCellFactory(EditableTextCell.instance());
-        this.nameHeaterCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameHeaterCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
+        this.endHeaterCol.setOnEditCommit(t -> {
+            t.getRowValue().setEnd(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.temperatureHeaterCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getTemperature()));
         this.temperatureHeaterCol.setCellFactory(ComboBoxTableCell.forTableColumn(Temperature.values()));
-        this.temperatureHeaterCol.setOnEditCommit(t -> t.getRowValue().setTemperature(t.getNewValue()));
-
-        this.equipmentStatusHeaterCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEquipmentStatus()));
-        this.equipmentStatusHeaterCol.setCellFactory(ComboBoxTableCell.forTableColumn(EquipmentStatus.values()));
-        this.equipmentStatusHeaterCol.setOnEditCommit(t -> t.getRowValue().setEquipmentStatus(t.getNewValue()));
+        this.temperatureHeaterCol.setOnEditCommit(t -> {
+            t.getRowValue().setTemperature(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewHeater.setEditable(true);
         tableViewHeater.setItems(FXCollections.observableList(this.eventManager.listEventByClass(AquecedorEvent.class)));
@@ -446,17 +506,17 @@ public class AppUI {
     private void configLightTable(final TableView<LuzEvent> tableViewLight) {
         this.startLightCol.setCellFactory(DateTimePickerCell.instance());
         this.startLightCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getStart()));
+        this.startLightCol.setOnEditCommit(t -> {
+            t.getRowValue().setStart(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         this.endLightCol.setCellFactory(DateTimePickerCell.instance());
         this.endLightCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEnd()));
-
-        this.nameLightCol.setCellFactory(EditableTextCell.instance());
-        this.nameLightCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.nameLightCol.setOnEditCommit(t -> t.getRowValue().setName(t.getNewValue()));
-
-        this.equipmentStatusLightCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEquipmentStatus()));
-        this.equipmentStatusLightCol.setCellFactory(ComboBoxTableCell.forTableColumn(EquipmentStatus.values()));
-        this.equipmentStatusLightCol.setOnEditCommit(t -> t.getRowValue().setEquipmentStatus(t.getNewValue()));
+        this.endLightCol.setOnEditCommit(t -> {
+            t.getRowValue().setEnd(t.getNewValue());
+            this.editEvent(t.getRowValue());
+        });
 
         tableViewLight.setEditable(true);
         tableViewLight.setItems(FXCollections.observableList(this.eventManager.listEventByClass(LuzEvent.class)));
@@ -485,8 +545,8 @@ public class AppUI {
 
     private Stage loadStage(final String fxmlPath, final String title, final Optional<Map<String, Object>> userData) throws Exception {
         final URL fxml = Paths.get(fxmlPath)
-                              .toUri()
-                              .toURL();
+                .toUri()
+                .toURL();
 
         final FXMLLoader loader = new FXMLLoader(fxml);
 
@@ -495,6 +555,8 @@ public class AppUI {
         userData.ifPresent(this.userData::putAll);
 
         controller.setUserData(this.userData);
+
+        this.eventManager.clearListeners();
 
         loader.setController(controller);
 
@@ -510,16 +572,20 @@ public class AppUI {
 
     private void hideAllPanes() {
         this.paneViews.values()
-                      .stream()
-                      .filter(Objects::nonNull)
-                      .forEach(t -> t.setVisible(false));
+                .stream()
+                .filter(Objects::nonNull)
+                .forEach(t -> t.setVisible(false));
     }
 
     private void hideAllTables() {
         this.tableViews.values()
-                       .stream()
-                       .filter(Objects::nonNull)
-                       .forEach(t -> t.setVisible(false));
+                .stream()
+                .filter(Objects::nonNull)
+                .forEach(t -> t.setVisible(false));
+    }
+
+    private void editEvent(final Event event) {
+        this.appController.updateEvent((DefaultEvent) event);
     }
 
     public void onClickExit() {
@@ -564,7 +630,7 @@ public class AppUI {
 
         final Event enqueued = (Event) selected;
 
-        this.appController.deleteScheduledEvent(enqueued.getId());
+        this.appController.deleteEvent((DefaultEvent) enqueued);
         this.eventManager.remove(enqueued);
     }
 
@@ -572,33 +638,71 @@ public class AppUI {
         final Equipment equipment = (Equipment) this.userData.get("type");
 
         if (equipment == Equipment.CAMERA) {
+            final String id = this.appController.createCameraEvent(
+                this.cameraEvent.getStart(),
+                this.cameraEvent.getEnd(),
+                this.cameraEvent.getRecording(),
+                this.cameraEvent.getEquipmentStatus()
+            );
+
+            this.cameraEvent.setId(id);
             this.eventManager.add(this.cameraEvent);
-            this.appController.scheduleEvent(this.cameraEvent);
 
         } else if (equipment == Equipment.HEATER) {
+            final String id = this.appController.createAquecedorEvent(
+                this.heaterEvent.getStart(),
+                this.heaterEvent.getEnd(),
+                this.heaterEvent.getTemperature(),
+                this.heaterEvent.getEquipmentStatus()
+            );
+
+            this.heaterEvent.setId(id);
             this.eventManager.add(this.heaterEvent);
-            this.appController.scheduleEvent(this.heaterEvent);
 
         } else if (equipment == Equipment.LIGHT) {
+            final String id = this.appController.createLuzEvent(
+                this.lightEvent.getStart(),
+                this.lightEvent.getEnd(),
+                this.lightEvent.getEquipmentStatus()
+            );
+
+            this.lightEvent.setId(id);
             this.eventManager.add(this.lightEvent);
-            this.appController.scheduleEvent(this.lightEvent);
 
         } else if (equipment == Equipment.MOBILE) {
+            final String id = this.appController.createMobileEvent(
+                this.mobileEvent.getStart(),
+                this.mobileEvent.getEnd(),
+                this.mobileEvent.getSpeed(),
+                this.mobileEvent.getEquipmentStatus()
+            );
+
+            this.mobileEvent.setId(id);
             this.eventManager.add(this.mobileEvent);
-            this.appController.scheduleEvent(this.mobileEvent);
 
         } else if (equipment == Equipment.SOUND) {
-            this.eventManager.add(this.soundEvent);
-            this.appController.scheduleEvent(this.soundEvent);
+            final String id = this.appController.createSomEvent(
+                this.soundEvent.getStart(),
+                this.soundEvent.getEnd(),
+                this.soundEvent.getMusicVolume(),
+                this.soundEvent.getCurrentSong(),
+                this.soundEvent.getEquipmentStatus()
+            );
 
+            this.soundEvent.setId(id);
+            this.eventManager.add(this.soundEvent);
         }
 
         this.showStage(this.loadConfigStage(), event);
     }
 
-    public void onClickToggleBaby(final ActionEvent event) throws InterruptedException {
-        this.appController.toggleBabyStatus();
-        this.configBabyStatus(this.babyStatus);
+    public void onClickToggleBaby(final ActionEvent event) {
+        if (this.appController.isBabyAwake()) this.appController.babySleep();
+        else this.appController.wakeUpBaby();
+    }
+
+    public void onClickMakeSound(final ActionEvent event) {
+        this.appController.makeSound();
     }
 
     private void showStage(final Stage stage, final ActionEvent event) {
@@ -607,7 +711,7 @@ public class AppUI {
     }
 
     private Scene getCurrentScene(final ActionEvent event) {
-        return ((Node)(event.getSource())).getScene();
+        return ((Node) (event.getSource())).getScene();
     }
 
     private void closeCurrentScreen(final ActionEvent event) {
@@ -620,5 +724,45 @@ public class AppUI {
 
     public void setUserData(Map<String, Object> userData) {
         this.userData = userData;
+    }
+
+    @Override
+    public void onEvent(final DefaultEvent event) {
+        Platform.runLater(() -> {
+            if (event.getOperation() == Operation.STATUS_CHANGED) {
+
+                if (event instanceof CameraEvent) {
+                    final CameraEvent e = CameraEvent.merge(this.eventManager.getCurrentCameraEvent(), (CameraEvent) event);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentCameraEvent(e);
+
+                } else if (event instanceof LuzEvent) {
+                    final LuzEvent e = LuzEvent.merge(this.eventManager.getCurrentLuzEvent(), (LuzEvent) event);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentLuzEvent(e);
+
+
+                } else if (event instanceof MobileEvent) {
+                    final MobileEvent e = MobileEvent.merge(this.eventManager.getCurrentMobileEvent(), (MobileEvent) event);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentMobileEvent(e);
+
+                } else if (event instanceof SomEvent) {
+                    final SomEvent e = SomEvent.merge(this.eventManager.getCurrentSomEvent(), (SomEvent) event);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentSomEvent(e);
+
+                } else if (event instanceof AquecedorEvent) {
+                    final AquecedorEvent e = AquecedorEvent.merge(this.eventManager.getCurrentHeaterEvent(), (AquecedorEvent) event);
+
+                    this.eventManager.replaceById(e);
+                    this.eventManager.setCurrentHeaterEvent(e);
+                }
+            }
+        });
     }
 }

@@ -1,8 +1,12 @@
 package br.ufrgs.inf;
 
-import br.ufrgs.inf.controller.EquipmentService;
 import br.ufrgs.inf.controller.AppController;
+import br.ufrgs.inf.controller.EquipmentService;
 import br.ufrgs.inf.controller.EventManager;
+import br.ufrgs.inf.data.builders.CameraEventBuilder;
+import br.ufrgs.inf.data.domain.EquipmentStatus;
+import br.ufrgs.inf.data.domain.Recording;
+import br.ufrgs.inf.data.events.CameraEvent;
 import br.ufrgs.inf.equipment.*;
 import br.ufrgs.inf.event.Dispatcher;
 import br.ufrgs.inf.event.Queue;
@@ -28,47 +32,63 @@ public class Main extends Application {
         final Som som = new Som();
         final Mobile mobile = new Mobile();
         final Luz luz = new Luz();
+        final Sound sound = new Sound();
 
         final Queue queue = new Queue();
+        final Queue uiQueue = new Queue();
 
-        final LocalDateTime start = LocalDateTime.now().plusMinutes(5);
-        final LocalDateTime end = start.plusMinutes(5);
-
-        final AquecedorHandler aquecedorHandler = new AquecedorHandler(aquecedor, queue);
-        final CameraHandler cameraHandler = new CameraHandler(camera, queue);
-        final MobileHandler mobileHandler = new MobileHandler(mobile, queue);
-        final SomHandler somHandler = new SomHandler(som, queue);
-        final LuzHandler luzHandler = new LuzHandler(luz, queue);
+        final AquecedorHandler aquecedorHandler = new AquecedorHandler(aquecedor, queue, uiQueue);
+        final CameraHandler cameraHandler = new CameraHandler(camera, queue, uiQueue);
+        final MobileHandler mobileHandler = new MobileHandler(mobile, queue, uiQueue);
+        final SomHandler somHandler = new SomHandler(som, queue, uiQueue);
+        final LuzHandler luzHandler = new LuzHandler(luz, queue, uiQueue);
+        final SoundHandler soundHandler = new SoundHandler(sound, queue, uiQueue);
 
         new Dispatcher(queue,
                 Collections.singletonList(aquecedorHandler),
                 Collections.singletonList(cameraHandler),
                 Collections.singletonList(luzHandler),
                 Collections.singletonList(mobileHandler),
-                Collections.singletonList(somHandler)
-        );
-
-        final Scheduler scheduler = new Scheduler(queue);
+                Collections.singletonList(somHandler),
+                Collections.singletonList(soundHandler)
+                );
 
         final EventManager eventManager = new EventManager();
 
         final EquipmentService equipmentService = new EquipmentService(
-            aquecedor,
-            camera,
-            luz,
-            mobile,
-            som
+                aquecedor,
+                camera,
+                luz,
+                mobile,
+                som
         );
 
-        final AppController appController = new AppController(queue, scheduler, equipmentService);
+        final AppController appController = new AppController(queue, equipmentService);
+
+        final LocalDateTime now = LocalDateTime.now();
+
 
         final URL fxml = Paths.get("./src/main/resources/app-main.fxml")
-                              .toUri()
-                              .toURL();
+                .toUri()
+                .toURL();
 
         final FXMLLoader loader = new FXMLLoader(fxml);
 
         final AppUI controller = new AppUI(appController, eventManager);
+
+        final String cameraId = appController.createCameraEvent(now, now, Recording.ON, EquipmentStatus.ON);
+
+        final CameraEvent cameraEvent = new CameraEventBuilder()
+                .start(now)
+                .end(now)
+                .equipmentStatus(EquipmentStatus.ON)
+                .recording(Recording.ON)
+                .id(cameraId)
+                .build();
+
+        eventManager.add(cameraEvent);
+
+        new Dispatcher(uiQueue, Collections.singletonList(controller));
 
         loader.setController(controller);
 
