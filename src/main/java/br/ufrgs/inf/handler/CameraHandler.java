@@ -141,7 +141,7 @@ public class CameraHandler implements EventListener<CameraEvent> {
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
                     .id(event.getId())
-                    .babyStatus(BabyStatus.AWAKING);
+                    .babyStatus(this.camera.getBabyStatus());
 
         } else if (event.getName() == EventName.BABY_SLEPT) {
             System.out.println("[Camera Handler] : BABY_SLEPT");

@@ -94,7 +94,7 @@ public class SomHandler implements EventListener<SomEvent> {
                     .id(event.getId())
                     .musicVolume(MusicVolume.LOW)
                     .song(event.getCurrentSong() != null ? event.getCurrentSong() : Song.FIRST)
-                    .equipmentStatus(EquipmentStatus.OFF);
+                    .equipmentStatus(this.som.getEquipmentStatus());
 
         } else if (event.getName() == EventName.BABY_MOVING) {
             System.out.println("[Som Handler] : BABY_MOVING");
