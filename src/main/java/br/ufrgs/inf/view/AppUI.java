@@ -216,11 +216,9 @@ public class AppUI implements EventListener<DefaultEvent> {
         Optional.ofNullable(this.babyStatus).ifPresent(this::configBabyStatus);
         Optional.ofNullable(this.babyBottleStatus).ifPresent(this::configBabyBottleStatus);
         Optional.ofNullable(this.cameraStatus).ifPresent(this::configCameraStatus);
-
         Optional.ofNullable(this.soundStatus).ifPresent(this::configSoundStatus);
         Optional.ofNullable(this.mobileSpeedStatus).ifPresent(this::configMobileStatus);
         Optional.ofNullable(this.lightStatus).ifPresent(this::configLightStatus);
-
         Optional.ofNullable(this.eventTypeTitle).ifPresent(this::configEventTypeTitle);
         Optional.ofNullable(this.cameraPane).ifPresent(this::configCameraPane);
         Optional.ofNullable(this.lightPane).ifPresent(this::configLightPane);
@@ -250,7 +248,7 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.mobileStart.setOnAction(event -> this.mobileEvent.setStart(this.mobileStart.getDateTimeValue()));
 
         this.mobileEnd.setValue(LocalDate.now());
-        this.mobileEnd.setOnAction(event -> this.mobileEvent.setStart(this.mobileEnd.getDateTimeValue()));
+        this.mobileEnd.setOnAction(event -> this.mobileEvent.setEnd(this.mobileEnd.getDateTimeValue()));
     }
 
     private void configSoundPane(final Pane soundPane) {
@@ -268,7 +266,7 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.soundStart.setOnAction(event -> this.soundEvent.setStart(this.soundStart.getDateTimeValue()));
 
         this.soundEnd.setValue(LocalDate.now());
-        this.soundEnd.setOnAction(event -> this.soundEvent.setStart(this.soundEnd.getDateTimeValue()));
+        this.soundEnd.setOnAction(event -> this.soundEvent.setEnd(this.soundEnd.getDateTimeValue()));
     }
 
     private void configHeaterPane(final Pane heaterPane) {
@@ -282,7 +280,7 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.heaterStart.setOnAction(event -> this.heaterEvent.setStart(this.heaterStart.getDateTimeValue()));
 
         this.heaterEnd.setValue(LocalDate.now());
-        this.heaterEnd.setOnAction(event -> this.heaterEvent.setStart(this.heaterEnd.getDateTimeValue()));
+        this.heaterEnd.setOnAction(event -> this.heaterEvent.setEnd(this.heaterEnd.getDateTimeValue()));
     }
 
     private void configLightPane(final Pane lightPane) {
@@ -292,7 +290,7 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.lightStart.setOnAction(event -> this.lightEvent.setStart(this.lightStart.getDateTimeValue()));
 
         this.lightEnd.setValue(LocalDate.now());
-        this.lightEnd.setOnAction(event -> this.lightEvent.setStart(this.lightEnd.getDateTimeValue()));
+        this.lightEnd.setOnAction(event -> this.lightEvent.setEnd(this.lightEnd.getDateTimeValue()));
     }
 
     private void configCameraPane(final Pane cameraPane) {

@@ -74,22 +74,25 @@ public class MobileHandler implements EventListener<MobileEvent> {
     public Integer handleStartEvent(MobileEvent event) {
         MobileEventBuilder eventBuilder = new MobileEventBuilder();
 
-        if (event.getName() == EventName.BABY_TIRED) {
+        if (event.getName() == EventName.BABY_WAKE_UP) {
             System.out.println("[Mobile Handler] : BABY_TIRED");
             mobile.turnOn();
-            mobile.setSpeed(MobileSpeed.SLOW);
+            mobile.setSpeed(MobileSpeed.FAST);
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
                     .id(event.getId())
                     .equipmentStatus(mobile.getEquipmentStatus())
                     .mobileSpeed(mobile.getSpeed());
+
         } else if (event.getName() == EventName.BABY_SLEPT) {
             System.out.println("[Mobile Handler] : BABY_SLEPT");
             mobile.turnOff();
             eventBuilder
                     .operation(Operation.STATUS_CHANGED)
                     .id(event.getId())
+                    .mobileSpeed(MobileSpeed.SLOW)
                     .equipmentStatus(mobile.getEquipmentStatus());
+
         } else if (event.getName() == EventName.BABY_MOVING) {
             System.out.println("[Mobile Handler] : BABY_MOVING");
             mobile.turnOn();
@@ -99,22 +102,8 @@ public class MobileHandler implements EventListener<MobileEvent> {
                     .id(event.getId())
                     .equipmentStatus(mobile.getEquipmentStatus())
                     .mobileSpeed(mobile.getSpeed());
-        } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
-        if (event.getEquipmentStatus() != mobile.getEquipmentStatus()) {
-            mobile.toggle();
-            eventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .equipmentStatus(mobile.getEquipmentStatus());
-        }
-        if (event.getSpeed() != mobile.getSpeed()) {
-            mobile.setSpeed(event.getSpeed());
-            eventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .mobileSpeed(mobile.getSpeed());
-        }
+        } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
         sendUiQueue(eventBuilder.build());
 

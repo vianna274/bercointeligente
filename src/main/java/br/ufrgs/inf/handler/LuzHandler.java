@@ -74,8 +74,14 @@ public class LuzHandler implements EventListener<LuzEvent> {
     public Integer handleStartEvent(LuzEvent event) {
         LuzEventBuilder eventBuilder = new LuzEventBuilder();
 
-        if (event.getName() == EventName.BABY_TIRED) {
+        if (event.getName() == EventName.BABY_WAKE_UP) {
             System.out.println("[Luz Handler] : BABY_TIRED");
+            luz.turnOn();
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
+                    .equipmentStatus(luz.getEquipmentStatus());
+
             // TODO luz ficar mais fraca
         } else if (event.getName() == EventName.BABY_MOVING) {
             System.out.println("[Luz Handler] : BABY_MOVING");
@@ -92,14 +98,6 @@ public class LuzHandler implements EventListener<LuzEvent> {
                     .id(event.getId())
                     .equipmentStatus(luz.getEquipmentStatus());
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
-
-        if (event.getEquipmentStatus() != luz.getEquipmentStatus()) {
-            luz.toggle();
-            eventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .equipmentStatus(luz.getEquipmentStatus());
-        }
 
         this.sendUiQueue(eventBuilder.build());
 

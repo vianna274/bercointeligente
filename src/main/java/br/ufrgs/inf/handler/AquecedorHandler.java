@@ -93,26 +93,11 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
                     .operation(Operation.STATUS_CHANGED)
                     .equipmentStatus(EquipmentStatus.ON)
                     .id(event.getId())
-                    .temperature(Temperature.AMBIENT);
+                    .temperature(Temperature.HOT);
         } else if (event.getName() != null) {
             return 0;
         } // Descartar eventos com nome que não foram tratados
-        if (event.getTemperature() != null && event.getTemperature() != aquecedor.getTemperature()) {
-            aquecedor.changeTemperature(event.getTemperature());
-            aquecedor.turnOn();
-            eventBuilder
-                    .temperature(event.getTemperature())
-                    .id(event.getId())
-                    .equipmentStatus(event.getEquipmentStatus())
-                    .operation(Operation.STATUS_CHANGED);
-        }
-        if (event.getEquipmentStatus() != null && event.getEquipmentStatus() != aquecedor.getEquipmentStatus()) {
-            aquecedor.toggle();
-            eventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .equipmentStatus(event.getEquipmentStatus());
-        }
+
 
         this.sendUiQueue(eventBuilder.build());
 

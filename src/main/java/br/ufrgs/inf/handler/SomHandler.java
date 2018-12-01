@@ -72,26 +72,30 @@ public class SomHandler implements EventListener<SomEvent> {
     public Integer handleStartEvent(SomEvent event) {
         SomEventBuilder somEventBuilder = new SomEventBuilder();
 
-        if (event.getName() == EventName.BABY_TIRED) {
+        if (event.getName() == EventName.BABY_WAKE_UP) {
             System.out.println("[Som Handler] : BABY_TIRED");
-            som.turnOn();
-            som.setMusicVolume(MusicVolume.LOW);
-            som.setCurrentSong(Song.FIRST);
+            som.turnOff();
+            som.setMusicVolume(MusicVolume.MEDIUM);
+            som.setCurrentSong(event.getCurrentSong() != null ? event.getCurrentSong() : Song.FIRST);
 
             somEventBuilder
                     .operation(Operation.STATUS_CHANGED)
-                    .musicVolume(MusicVolume.LOW)
-                    .song(Song.FIRST)
+                    .musicVolume(som.getMusicVolume())
+                    .song(som.getCurrentSong())
                     .id(event.getId())
                     .equipmentStatus(EquipmentStatus.ON);
+
         } else if (event.getName() == EventName.BABY_SLEPT) {
             System.out.println("[Som Handler] : BABY_SLEPT");
-            som.turnOff();
+            som.turnOn();
 
             somEventBuilder
                     .operation(Operation.STATUS_CHANGED)
                     .id(event.getId())
+                    .musicVolume(MusicVolume.LOW)
+                    .song(event.getCurrentSong() != null ? event.getCurrentSong() : Song.FIRST)
                     .equipmentStatus(EquipmentStatus.OFF);
+
         } else if (event.getName() == EventName.BABY_MOVING) {
             System.out.println("[Som Handler] : BABY_MOVING");
             som.turnOn();
@@ -105,31 +109,6 @@ public class SomHandler implements EventListener<SomEvent> {
                     .id(event.getId())
                     .equipmentStatus(EquipmentStatus.ON);
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
-
-
-        if (event.getEquipmentStatus() != som.getEquipmentStatus()) {
-            som.toggle();
-            somEventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .equipmentStatus(som.getEquipmentStatus());
-        }
-
-        if (event.getCurrentSong() != som.getCurrentSong()) {
-            som.setCurrentSong(event.getCurrentSong());
-            somEventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .song(som.getCurrentSong());
-        }
-
-        if (event.getMusicVolume() != som.getMusicVolume()) {
-            som.setMusicVolume(event.getMusicVolume());
-            somEventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .musicVolume(som.getMusicVolume());
-        }
 
         this.sendUiQueue(somEventBuilder.build());
 
