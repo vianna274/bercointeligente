@@ -334,12 +334,12 @@ public class AppUI implements EventListener<DefaultEvent> {
         this.eventManager.addHeaterListener(b -> {
             final AquecedorEvent c = AquecedorEvent.merge((AquecedorEvent) b);
 
-            this.babyBottleStatus.setText(c.getEquipmentStatus().toString() + " - " + c.getTemperature().toString());
+            this.babyBottleStatus.setText(c.getEquipmentStatus() != EquipmentStatus.OFF ? c.getEquipmentStatus().toString() + " - " + c.getTemperature().toString() : EquipmentStatus.OFF.toString());
         });
 
         final AquecedorEvent event = this.eventManager.getCurrentHeaterEvent();
 
-        final String text = event != null ? event.getEquipmentStatus().toString() + " - " + event.getTemperature().toString() : EquipmentStatus.OFF + " - " + Temperature.AMBIENT.toString();
+        final String text = event != null && event.getEquipmentStatus() != EquipmentStatus.OFF ? event.getEquipmentStatus().toString() + " - " + event.getTemperature().toString() : EquipmentStatus.OFF.toString();
 
         this.babyBottleStatus.setText(text);
     }
@@ -361,12 +361,12 @@ public class AppUI implements EventListener<DefaultEvent> {
     private void configSoundStatus(final Label soundStatus) {
         this.eventManager.addSoundListener(sound -> {
             final SomEvent s = SomEvent.merge((SomEvent) sound);
-            this.soundStatus.setText(s.getEquipmentStatus().toString() + " - " + s.getMusicVolume().toString());
+            this.soundStatus.setText(s.getEquipmentStatus() != EquipmentStatus.OFF ? s.getEquipmentStatus().toString() + " - " + s.getMusicVolume().toString() : EquipmentStatus.OFF.toString());
         });
 
         final SomEvent event = this.eventManager.getCurrentSomEvent();
 
-        final String text = event != null ? event.getEquipmentStatus().toString() + " - " + event.getMusicVolume().toString() : EquipmentStatus.OFF.toString() + " - " + MusicVolume.MEDIUM.toString();
+        final String text = event != null && event.getEquipmentStatus() != EquipmentStatus.OFF ? event.getEquipmentStatus().toString() + " - " + event.getMusicVolume().toString() : EquipmentStatus.OFF.toString();
 
         this.soundStatus.setText(text);
     }
@@ -387,12 +387,12 @@ public class AppUI implements EventListener<DefaultEvent> {
     private void configMobileStatus(final Label mobileStatus) {
         this.eventManager.addMobileListener(m -> {
             final MobileEvent e = MobileEvent.merge((MobileEvent) m);
-            this.mobileSpeedStatus.setText(e.getEquipmentStatus().toString() + " - " + e.getSpeed().toString());
+            this.mobileSpeedStatus.setText(e.getEquipmentStatus() != EquipmentStatus.OFF ? e.getEquipmentStatus().toString() + " - " + e.getSpeed().toString() : EquipmentStatus.OFF.toString());
         });
 
         final MobileEvent event = this.eventManager.getCurrentMobileEvent();
 
-        final String text = event != null ? event.getEquipmentStatus().toString() + " - " + event.getSpeed().toString() : EquipmentStatus.OFF.toString() + " - " + MobileSpeed.MEDIUM.toString();
+        final String text = event != null && event.getEquipmentStatus() != EquipmentStatus.OFF ? event.getEquipmentStatus().toString() + " - " + event.getSpeed().toString() : EquipmentStatus.OFF.toString();
 
         this.mobileSpeedStatus.setText(text);
     }
