@@ -1,7 +1,9 @@
 package br.ufrgs.inf.handler;
 
 import br.ufrgs.inf.data.builders.*;
-import br.ufrgs.inf.data.domain.*;
+import br.ufrgs.inf.data.domain.BabyStatus;
+import br.ufrgs.inf.data.domain.EventName;
+import br.ufrgs.inf.data.domain.Operation;
 import br.ufrgs.inf.data.events.*;
 import br.ufrgs.inf.equipment.Camera;
 import br.ufrgs.inf.event.EventListener;
@@ -151,19 +153,14 @@ public class CameraHandler implements EventListener<CameraEvent> {
                     .babyStatus(BabyStatus.SLEEPING);
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
-        if (event.getEquipmentStatus() != null && event.getEquipmentStatus() != camera.getEquipmentStatus()) {
+        if (event.getOperation() != Operation.ACTION) {
             camera.toggle();
+
             eventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .equipmentStatus(event.getEquipmentStatus());
-        }
-        if (event.getRecording() != null) {
-            camera.recordingControl(event.getRecording());
-            eventBuilder
-                    .operation(Operation.STATUS_CHANGED)
-                    .id(event.getId())
-                    .recording(event.getRecording());
+                .recording(event.getRecording())
+                .operation(Operation.STATUS_CHANGED)
+                .id(event.getId())
+                .equipmentStatus(event.getEquipmentStatus());
         }
 
         this.sendUiQueue(eventBuilder.build());

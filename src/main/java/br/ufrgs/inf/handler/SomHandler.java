@@ -110,6 +110,19 @@ public class SomHandler implements EventListener<SomEvent> {
                     .equipmentStatus(EquipmentStatus.ON);
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
+        if (event.getOperation() != Operation.ACTION) {
+            som.toggle();
+            som.setCurrentSong(event.getCurrentSong());
+            som.setMusicVolume(event.getMusicVolume());
+
+            somEventBuilder
+                .operation(Operation.STATUS_CHANGED)
+                .id(event.getId())
+                .equipmentStatus(som.getEquipmentStatus())
+                .song(som.getCurrentSong())
+                .musicVolume(som.getMusicVolume());
+        }
+
         this.sendUiQueue(somEventBuilder.build());
 
         return 0;

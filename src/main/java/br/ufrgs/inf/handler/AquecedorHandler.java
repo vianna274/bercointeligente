@@ -2,10 +2,10 @@ package br.ufrgs.inf.handler;
 
 import br.ufrgs.inf.data.builders.AquecedorEventBuilder;
 import br.ufrgs.inf.data.domain.EquipmentStatus;
-import br.ufrgs.inf.data.domain.Operation;
-import br.ufrgs.inf.data.events.AquecedorEvent;
 import br.ufrgs.inf.data.domain.EventName;
+import br.ufrgs.inf.data.domain.Operation;
 import br.ufrgs.inf.data.domain.Temperature;
+import br.ufrgs.inf.data.events.AquecedorEvent;
 import br.ufrgs.inf.equipment.Aquecedor;
 import br.ufrgs.inf.event.EventListener;
 import br.ufrgs.inf.event.Queue;
@@ -98,6 +98,14 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
             return 0;
         } // Descartar eventos com nome que não foram tratados
 
+        if (event.getOperation() != Operation.ACTION ) {
+            aquecedor.toggle();
+            eventBuilder
+                .operation(Operation.STATUS_CHANGED)
+                .id(event.getId())
+                .temperature(event.getTemperature())
+                .equipmentStatus(aquecedor.getEquipmentStatus());
+        }
 
         this.sendUiQueue(eventBuilder.build());
 

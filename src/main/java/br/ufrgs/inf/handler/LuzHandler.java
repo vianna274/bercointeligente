@@ -99,6 +99,15 @@ public class LuzHandler implements EventListener<LuzEvent> {
                     .equipmentStatus(luz.getEquipmentStatus());
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
+        if (event.getOperation() != Operation.ACTION) {
+            luz.turnOn();
+
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
+                    .equipmentStatus(luz.getEquipmentStatus());
+        }
+
         this.sendUiQueue(eventBuilder.build());
 
         return 0;

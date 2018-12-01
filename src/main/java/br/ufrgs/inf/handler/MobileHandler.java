@@ -105,6 +105,15 @@ public class MobileHandler implements EventListener<MobileEvent> {
 
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
+        if (event.getOperation() != Operation.ACTION) {
+            mobile.toggle();
+            eventBuilder
+                    .operation(Operation.STATUS_CHANGED)
+                    .id(event.getId())
+                    .mobileSpeed(event.getSpeed())
+                    .equipmentStatus(mobile.getEquipmentStatus());
+        }
+
         sendUiQueue(eventBuilder.build());
 
         return 0;
