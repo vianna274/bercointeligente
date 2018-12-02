@@ -80,6 +80,10 @@ public class Scheduler<T extends DefaultEvent> {
 
     public void removeEvent(T event) {
         final String id = event.getId();
+        if (currentEvent != null && currentEvent.getId().equals(id)) {
+            endEventCallback.apply(event);
+            currentEvent = null;
+        }
         Optional<T> eventToRemove = this.events.stream().filter(e -> e.getId().equals(id)).findFirst();
         eventToRemove.ifPresent(e -> events.remove(e));
     }
