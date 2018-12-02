@@ -7,7 +7,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
-import tornadofx.control.DateTimePicker;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
