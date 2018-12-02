@@ -111,7 +111,7 @@ public class SomHandler implements EventListener<SomEvent> {
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
         if (event.getOperation() != Operation.ACTION) {
-            som.toggle();
+            som.turnOn();
             som.setCurrentSong(event.getCurrentSong());
             som.setMusicVolume(event.getMusicVolume());
 

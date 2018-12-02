@@ -99,7 +99,7 @@ public class AquecedorHandler implements EventListener<AquecedorEvent> {
         } // Descartar eventos com nome que não foram tratados
 
         if (event.getOperation() != Operation.ACTION ) {
-            aquecedor.toggle();
+            aquecedor.turnOn();
             eventBuilder
                 .operation(Operation.STATUS_CHANGED)
                 .id(event.getId())

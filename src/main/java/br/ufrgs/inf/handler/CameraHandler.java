@@ -154,7 +154,7 @@ public class CameraHandler implements EventListener<CameraEvent> {
         } else if (event.getName() != null) return 0; // Descartar eventos com nome que não foram tratados
 
         if (event.getOperation() != Operation.ACTION) {
-            camera.toggle();
+            camera.turnOn();
 
             eventBuilder
                 .recording(event.getRecording())
