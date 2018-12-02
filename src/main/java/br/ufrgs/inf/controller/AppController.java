@@ -45,11 +45,9 @@ public class AppController {
     }
 
     public void makeSound() {
-        SoundEvent event = new SoundEventBuilder()
-                .operation(Operation.ACTION)
-                .eventName(EventName.BABY_WAKE_UP)
-                .build();
-        this.queue.enqueue(event);
+        if (!isBabyAwake()) {
+            this.wakeUpBaby();
+        }
     }
 
     /* POST */

@@ -67,10 +67,7 @@ public class Main extends Application {
 
         final LocalDateTime now = LocalDateTime.now();
 
-
-        final URL fxml = Paths.get("./src/main/resources/app-main.fxml")
-                .toUri()
-                .toURL();
+        final URL fxml = Main.class.getClassLoader().getResource("app-main.fxml");
 
         final FXMLLoader loader = new FXMLLoader(fxml);
 
