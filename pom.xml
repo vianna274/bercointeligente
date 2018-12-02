@@ -34,7 +34,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <fx.home>${user.home}/.asdf/installs/java/oracle-8.191/jre/lib/ext</fx.home>
+                <fx.home>C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext</fx.home>
             </properties>
         </profile>
     </profiles>
