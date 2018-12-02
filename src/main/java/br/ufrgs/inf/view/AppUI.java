@@ -22,7 +22,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -528,15 +527,15 @@ public class AppUI implements EventListener<DefaultEvent> {
     }
 
     private Stage loadConfigStage() throws Exception {
-        return loadStage("./src/main/resources/app-config.fxml", "Berço Inteligente - Configuração");
+        return loadStage("app-config.fxml", "Berço Inteligente - Configuração");
     }
 
     private Stage loadAddStage(final Map<String, Object> userData) throws Exception {
-        return loadStage("./src/main/resources/app-add.fxml", "Berço Inteligente - Adicionar", Optional.ofNullable(userData));
+        return loadStage("app-add.fxml", "Berço Inteligente - Adicionar", Optional.ofNullable(userData));
     }
 
     private Stage loadAppStage() throws Exception {
-        return loadStage("./src/main/resources/app-main.fxml", "Berço Inteligente");
+        return loadStage("app-main.fxml", "Berço Inteligente");
     }
 
     private Stage loadStage(final String fxmlPath, final String title) throws Exception {
@@ -544,9 +543,7 @@ public class AppUI implements EventListener<DefaultEvent> {
     }
 
     private Stage loadStage(final String fxmlPath, final String title, final Optional<Map<String, Object>> userData) throws Exception {
-        final URL fxml = Paths.get(fxmlPath)
-                .toUri()
-                .toURL();
+        final URL fxml = AppUI.class.getClassLoader().getResource(fxmlPath);
 
         final FXMLLoader loader = new FXMLLoader(fxml);
 
