@@ -91,7 +91,7 @@ public class Main extends Application {
 
         final Parent root = loader.load();
 
-        stage.setTitle("Berço Inteligente");
+        stage.setTitle("Berco Inteligente");
         stage.setScene(new Scene(root));
 
         stage.show();

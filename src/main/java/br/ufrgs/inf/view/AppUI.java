@@ -527,15 +527,15 @@ public class AppUI implements EventListener<DefaultEvent> {
     }
 
     private Stage loadConfigStage() throws Exception {
-        return loadStage("app-config.fxml", "Berço Inteligente - Configuração");
+        return loadStage("app-config.fxml", "Berco Inteligente - Configuracao");
     }
 
     private Stage loadAddStage(final Map<String, Object> userData) throws Exception {
-        return loadStage("app-add.fxml", "Berço Inteligente - Adicionar", Optional.ofNullable(userData));
+        return loadStage("app-add.fxml", "Berco Inteligente - Adicionar", Optional.ofNullable(userData));
     }
 
     private Stage loadAppStage() throws Exception {
-        return loadStage("app-main.fxml", "Berço Inteligente");
+        return loadStage("app-main.fxml", "Berco Inteligente");
     }
 
     private Stage loadStage(final String fxmlPath, final String title) throws Exception {

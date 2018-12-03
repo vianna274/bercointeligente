@@ -12,7 +12,7 @@ public enum Equipment {
 
     LIGHT("Luz"),
 
-    MOBILE("Móbile");
+    MOBILE("Mobile");
 
     private final String label;
 

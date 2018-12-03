@@ -6,7 +6,7 @@ public enum MobileSpeed {
 
     SLOW("Lento"),
 
-    FAST("Rápido");
+    FAST("Rapido");
 
     private final String label;
 

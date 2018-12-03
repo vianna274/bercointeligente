@@ -2,11 +2,11 @@ package br.ufrgs.inf.data.domain;
 
 public enum Song {
 
-    FIRST("Primeira Música"),
+    FIRST("Primeira Musica"),
 
-    SECOND("Segunda Música"),
+    SECOND("Segunda Musica"),
 
-    THIRD("Terceira Música");
+    THIRD("Terceira Musica");
 
     private final String label;
 
